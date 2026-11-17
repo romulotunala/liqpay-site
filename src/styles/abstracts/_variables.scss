@@ -1,39 +1,119 @@
 // =============================================================================
-// Variáveis de design tokens
+// Design tokens
+// Fonte única dos valores. Os mapas abaixo também viram CSS custom properties em
+// base/_tokens.scss; componentes usam as custom properties semânticas (--surface, --text…)
+// para funcionar em qualquer tom de seção.
 // =============================================================================
 
-// Cores
-$color-primary: #0070f3;
-$color-primary-dark: #0051cc;
-$color-secondary: #ff6b35;
-$color-text: #1a1a1a;
-$color-text-muted: #666;
-$color-bg: #fff;
-$color-bg-alt: #f5f5f5;
-$color-border: #e5e5e5;
+// -----------------------------------------------------------------------------
+// Cores — paleta base (nunca usada direto pelos componentes; ver $themes)
+// -----------------------------------------------------------------------------
+$palette: (
+  'ink-950': #07110d,
+  'ink-900': #0e1f17,
+  'ink-800': #163026,
+  'emerald-700': #1b5e3b,
+  'emerald-500': #2e8b57,
+  'glow-400': #4ade80,
+  'gold-400': #d4af63,
+  'gold-300': #e6cb8e,
+  'gold-700': #8a6a26,
+  'ivory-50': #f7f4ec,
+  'white': #fff,
+  'text-strong': #0b1a12,
+  'text-muted': #55635b,
+  'text-inverse': #f4f1e8,
+  'text-inverse-muted': #a8b5ad,
+);
 
+// -----------------------------------------------------------------------------
+// Temas por seção: semântico → nome da cor na paleta (ou valor literal)
+// -----------------------------------------------------------------------------
+$themes: (
+  'dark': (
+    'surface': 'ink-950',
+    'surface-raised': 'ink-900',
+    'text': 'text-inverse',
+    'text-muted': 'text-inverse-muted',
+    'accent': 'gold-400',
+    'eyebrow': 'gold-400',
+    'border': 'ink-800',
+    'focus-ring': 'glow-400',
+  ),
+  'light': (
+    'surface': 'ivory-50',
+    'surface-raised': 'white',
+    'text': 'text-strong',
+    'text-muted': 'text-muted',
+    'accent': 'emerald-700',
+    'eyebrow': 'gold-700',
+    'border': rgb(11 26 18 / 10%),
+    'focus-ring': 'emerald-700',
+  ),
+  'white': (
+    'surface': 'white',
+    'surface-raised': 'ivory-50',
+    'text': 'text-strong',
+    'text-muted': 'text-muted',
+    'accent': 'emerald-700',
+    'eyebrow': 'gold-700',
+    'border': rgb(11 26 18 / 8%),
+    'focus-ring': 'emerald-700',
+  ),
+);
+
+$default-theme: 'light';
+
+// -----------------------------------------------------------------------------
+// Gradientes
+// -----------------------------------------------------------------------------
+$gradients: (
+  'gold-metallic': linear-gradient(135deg, #e6cb8e 0%, #d4af63 45%, #a9853d 100%),
+  'emerald-glow': radial-gradient(60% 50% at 70% 30%, rgb(74 222 128 / 18%) 0%, transparent 70%),
+  'gold-line': linear-gradient(90deg, transparent, #d4af63, transparent),
+);
+
+// -----------------------------------------------------------------------------
 // Tipografia
-$font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-$font-mono: 'Fira Code', 'Courier New', monospace;
-
-$font-size-sm: 0.875rem;    // 14px
-$font-size-base: 1rem;      // 16px
-$font-size-lg: 1.125rem;    // 18px
-$font-size-xl: 1.25rem;     // 20px
-$font-size-2xl: 1.5rem;     // 24px
-$font-size-3xl: 2rem;       // 32px
-$font-size-4xl: 2.5rem;     // 40px
-$font-size-5xl: 3.5rem;     // 56px
+// As famílias vêm do next/font (variáveis definidas no layout).
+// -----------------------------------------------------------------------------
+$font-heading: var(--font-sora), system-ui, sans-serif;
+$font-body: var(--font-inter), system-ui, sans-serif;
 
 $font-weight-regular: 400;
 $font-weight-medium: 500;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
-$line-height-tight: 1.2;
-$line-height-base: 1.6;
+$text-sizes: (
+  'display': clamp(2.5rem, 5vw + 1rem, 4.5rem),
+  'h1': clamp(2rem, 3vw + 1rem, 3.25rem),
+  'h2': clamp(1.75rem, 2vw + 1rem, 2.5rem),
+  'h3': clamp(1.25rem, 1vw + 0.9rem, 1.5rem),
+  'lead': clamp(1.125rem, 0.5vw + 1rem, 1.3125rem),
+  'body': 1rem,
+  'small': 0.875rem,
+  'eyebrow': 0.8125rem,
+);
 
-// Espaçamento
+$line-height-display: 1.05;
+$line-height-h1: 1.1;
+$line-height-h2: 1.15;
+$line-height-h3: 1.25;
+$line-height-lead: 1.6;
+$line-height-body: 1.65;
+$line-height-small: 1.5;
+$line-height-eyebrow: 1.4;
+
+$letter-spacing-heading: -0.02em;
+$letter-spacing-eyebrow: 0.14em;
+
+$measure-paragraph: 65ch;
+$measure-hero-lead: 48ch;
+
+// -----------------------------------------------------------------------------
+// Espaçamento (escala de 4px)
+// -----------------------------------------------------------------------------
 $spacing-1: 0.25rem;
 $spacing-2: 0.5rem;
 $spacing-3: 0.75rem;
@@ -46,28 +126,59 @@ $spacing-16: 4rem;
 $spacing-20: 5rem;
 $spacing-24: 6rem;
 
+// -----------------------------------------------------------------------------
 // Layout
+// -----------------------------------------------------------------------------
 $container-max: 1200px;
-$container-padding: $spacing-6;
+$container-padding-inline: clamp(1rem, 4vw, 2rem);
+$section-padding-block: clamp(4rem, 8vw, 8rem);
+$grid-columns-mobile: 4;
+$grid-columns-desktop: 12;
+$grid-gap: clamp(1rem, 2vw, 1.5rem);
 
-// Breakpoints
+// Breakpoints (mobile-first)
 $bp-sm: 640px;
 $bp-md: 768px;
 $bp-lg: 1024px;
 $bp-xl: 1280px;
 
-// Bordas
-$border-radius-sm: 4px;
-$border-radius-md: 8px;
-$border-radius-lg: 16px;
-$border-radius-full: 9999px;
+// -----------------------------------------------------------------------------
+// Forma
+// -----------------------------------------------------------------------------
+$radii: (
+  'sm': 8px,
+  'md': 16px,
+  'lg': 28px,
+  'full': 9999px,
+);
 
-// Transições
-$transition-fast: 150ms ease;
-$transition-base: 250ms ease;
-$transition-slow: 400ms ease;
+// Só no tema claro; no escuro, borda e brilho interno.
+$shadows: (
+  'card': (0 1px 2px rgb(11 26 18 / 4%), 0 8px 24px rgb(11 26 18 / 6%)),
+  'card-hover': (0 2px 4px rgb(11 26 18 / 6%), 0 16px 40px rgb(11 26 18 / 10%)),
+);
 
-// Sombras
-$shadow-sm: 0 1px 2px rgb(0 0 0 / 5%);
-$shadow-md: 0 4px 6px rgb(0 0 0 / 7%);
-$shadow-lg: 0 10px 15px rgb(0 0 0 / 10%);
+$z-indexes: (
+  'header': 50,
+  'whatsapp': 60,
+  'menu': 70,
+  'skip-link': 100,
+);
+
+// -----------------------------------------------------------------------------
+// Movimento
+// -----------------------------------------------------------------------------
+$durations: (
+  'fast': 150ms,
+  'base': 300ms,
+  'reveal': 700ms,
+  'draw': 1200ms,
+);
+
+$easings: (
+  'out': cubic-bezier(0.22, 1, 0.36, 1),
+  'in-out': cubic-bezier(0.65, 0, 0.35, 1),
+);
+
+$stagger: 80ms;
+$reveal-distance: 24px;

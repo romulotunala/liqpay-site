@@ -2,7 +2,7 @@
 // Reset + normalize básico
 // =============================================================================
 
-@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
 
 *,
 *::before,
@@ -16,15 +16,16 @@ html {
   font-size: 100%;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+
+  @include reduced-motion {
+    scroll-behavior: auto;
+  }
 }
 
 body {
-  font-family: $font-sans;
-  font-size: $font-size-base;
-  font-weight: $font-weight-regular;
-  line-height: $line-height-base;
-  color: $color-text;
-  background-color: $color-bg;
+  min-height: 100vh;
+  color: var(--text);
+  background-color: var(--surface);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -51,6 +52,7 @@ button {
   border: none;
   background: none;
   font: inherit;
+  color: inherit;
 }
 
 input,

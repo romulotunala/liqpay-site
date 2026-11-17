@@ -4,38 +4,51 @@
 
 @use '../abstracts/variables' as *;
 
+body {
+  font-family: $font-body;
+  font-size: var(--text-body);
+  font-weight: $font-weight-regular;
+  line-height: $line-height-body;
+}
+
 h1,
 h2,
 h3,
-h4,
-h5,
-h6 {
-  font-weight: $font-weight-bold;
-  line-height: $line-height-tight;
-  color: $color-text;
+h4 {
+  font-family: $font-heading;
+  letter-spacing: $letter-spacing-heading;
+  text-wrap: balance;
 }
 
-h1 { font-size: $font-size-4xl; }
-h2 { font-size: $font-size-3xl; }
-h3 { font-size: $font-size-2xl; }
-h4 { font-size: $font-size-xl; }
-h5 { font-size: $font-size-lg; }
-h6 { font-size: $font-size-base; }
+h1 {
+  font-size: var(--text-h1);
+  font-weight: $font-weight-bold;
+  line-height: $line-height-h1;
+}
+
+h2 {
+  font-size: var(--text-h2);
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-h2;
+}
+
+h3,
+h4 {
+  font-size: var(--text-h3);
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-h3;
+}
 
 p {
-  margin-bottom: $spacing-4;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  max-inline-size: $measure-paragraph;
+  text-wrap: pretty;
 }
 
 strong {
   font-weight: $font-weight-semibold;
 }
 
-code,
-pre {
-  font-family: $font-mono;
-  font-size: $font-size-sm;
+small {
+  font-size: var(--text-small);
+  line-height: $line-height-small;
 }

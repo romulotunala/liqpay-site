@@ -1,0 +1,74 @@
+// =============================================================================
+// Tokens como CSS custom properties + temas por seção
+// Gerados a partir dos mapas de abstracts/_variables.scss.
+// =============================================================================
+
+@use 'sass:map';
+@use 'sass:meta';
+@use '../abstracts/variables' as *;
+
+/// Valor de um token semântico: nome da paleta vira var(--color-*), o resto passa direto.
+@function theme-value($value) {
+  @if meta.type-of($value) == 'string' and map.has-key($palette, $value) {
+    @return var(--color-#{$value});
+  }
+
+  @return $value;
+}
+
+@mixin theme($name) {
+  @each $token, $value in map.get($themes, $name) {
+    --#{$token}: #{theme-value($value)};
+  }
+}
+
+:root {
+  // Permite transicionar para block-size: auto (animação do Accordion).
+  interpolate-size: allow-keywords;
+
+  @each $name, $value in $palette {
+    --color-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $gradients {
+    --gradient-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $text-sizes {
+    --text-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $radii {
+    --radius-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $shadows {
+    --shadow-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $z-indexes {
+    --z-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $durations {
+    --duration-#{$name}: #{$value};
+  }
+
+  @each $name, $value in $easings {
+    --ease-#{$name}: #{$value};
+  }
+
+  --stagger: #{$stagger};
+  --reveal-distance: #{$reveal-distance};
+
+  @include theme($default-theme);
+}
+
+@each $name, $tokens in $themes {
+  [data-tone='#{$name}'] {
+    @include theme($name);
+
+    background-color: var(--surface);
+    color: var(--text);
+  }
+}

@@ -4,12 +4,12 @@
 
 @use 'variables' as *;
 
-/// Container centralizado com padding responsivo
+/// Container centralizado com respiro lateral fluido
 @mixin container {
   width: 100%;
   max-width: $container-max;
   margin-inline: auto;
-  padding-inline: $container-padding;
+  padding-inline: $container-padding-inline;
 }
 
 /// Media query a partir de um breakpoint (mobile-first)
@@ -24,34 +24,43 @@
   } @else if $bp == xl {
     @media (min-width: #{$bp-xl}) { @content; }
   } @else {
-    @warn 'Breakpoint desconhecido: #{$bp}';
+    @error 'Breakpoint desconhecido: #{$bp}';
   }
 }
 
-/// Flex helper
-@mixin flex($direction: row, $align: center, $justify: flex-start, $gap: 0) {
-  display: flex;
-  flex-direction: $direction;
-  align-items: $align;
-  justify-content: $justify;
-  gap: $gap;
+/// Regras para quem pediu menos movimento ao sistema
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) { @content; }
 }
 
-/// Grid responsivo por número de colunas
-@mixin grid($cols: 1, $gap: $spacing-6) {
-  display: grid;
-  grid-template-columns: repeat($cols, 1fr);
-  gap: $gap;
+/// Foco visível; a cor acompanha o tom da seção
+@mixin focus-ring {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
-/// Truncar texto com ellipsis
-@mixin truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/// Rótulo acima do título: caixa alta com traço de 24×1px antes. Nunca em pílula.
+@mixin eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-3;
+  font-family: $font-body;
+  font-size: var(--text-eyebrow);
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-eyebrow;
+  letter-spacing: $letter-spacing-eyebrow;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+
+  &::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background-color: currentcolor;
+  }
 }
 
-/// Esconder visualmente mas manter acessível para screen readers
+/// Esconde visualmente, mas mantém acessível para leitores de tela
 @mixin visually-hidden {
   position: absolute;
   width: 1px;
@@ -64,8 +73,9 @@
   border: 0;
 }
 
-/// Focus ring acessível
-@mixin focus-ring {
-  outline: 2px solid $color-primary;
-  outline-offset: 2px;
+/// Trunca texto em uma linha com reticências
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

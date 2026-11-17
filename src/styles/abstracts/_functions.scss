@@ -2,25 +2,25 @@
 // Funções utilitárias
 // =============================================================================
 
-@use 'variables' as *;
 @use 'sass:color';
+@use 'sass:math';
 
 /// Converte px para rem
 /// @param {number} $px - valor em pixels (sem unidade)
-/// @return {string} valor em rem
+/// @return {number} valor em rem
 @function rem($px) {
-  @return #{$px / 16}rem;
+  @return math.div($px, 16) * 1rem;
 }
 
-/// Retorna um tom mais claro de uma cor misturando com branco
-/// @param {color} $color
+/// Tom mais claro de uma cor, misturando com branco
+/// @param {color} $col
 /// @param {percentage} $amount - quanto de branco misturar
 @function tint($col, $amount) {
   @return color.mix(white, $col, $amount);
 }
 
-/// Retorna um tom mais escuro de uma cor misturando com preto
-/// @param {color} $color
+/// Tom mais escuro de uma cor, misturando com preto
+/// @param {color} $col
 /// @param {percentage} $amount - quanto de preto misturar
 @function shade($col, $amount) {
   @return color.mix(black, $col, $amount);

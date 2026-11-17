@@ -1,6 +1,6 @@
 // =============================================================================
-// Button — CSS Module
-// Demonstra o padrão: SCSS + CSS Modules, sem classes utilitárias
+// Button — provisório: só adaptado aos tokens novos. O visual do design system entra
+// junto com a refatoração do componente.
 // =============================================================================
 
 @use '../../styles/abstracts/variables' as *;
@@ -11,10 +11,12 @@
   align-items: center;
   justify-content: center;
   gap: $spacing-2;
-  border-radius: $border-radius-md;
-  font-weight: $font-weight-medium;
-  transition: background-color $transition-fast, color $transition-fast,
-    border-color $transition-fast, box-shadow $transition-fast;
+  border-radius: var(--radius-full);
+  font-weight: $font-weight-semibold;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
   cursor: pointer;
   white-space: nowrap;
 
@@ -31,47 +33,34 @@
 // Tamanhos
 .sm {
   padding: $spacing-1 $spacing-3;
-  font-size: $font-size-sm;
+  font-size: var(--text-small);
 }
 
 .md {
   padding: $spacing-2 $spacing-6;
-  font-size: $font-size-base;
+  font-size: var(--text-body);
 }
 
 .lg {
   padding: $spacing-3 $spacing-8;
-  font-size: $font-size-lg;
+  font-size: var(--text-lead);
 }
 
 // Variantes
 .primary {
-  background-color: $color-primary;
-  color: #fff;
+  background-color: var(--color-gold-400);
+  color: var(--color-ink-950);
   border: 2px solid transparent;
-
-  &:hover:not(:disabled) {
-    background-color: $color-primary-dark;
-  }
 }
 
 .secondary {
   background-color: transparent;
-  color: $color-primary;
-  border: 2px solid $color-primary;
-
-  &:hover:not(:disabled) {
-    background-color: $color-primary;
-    color: #fff;
-  }
+  color: var(--accent);
+  border: 2px solid var(--accent);
 }
 
 .ghost {
   background-color: transparent;
-  color: $color-text;
+  color: var(--accent);
   border: 2px solid transparent;
-
-  &:hover:not(:disabled) {
-    background-color: $color-bg-alt;
-  }
 }
