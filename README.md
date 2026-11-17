@@ -1,161 +1,77 @@
-# nextforge
+# LiqPay — site institucional
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
-![React](https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)
-![SCSS Modules](https://img.shields.io/badge/SCSS-Modules-cc6699?logo=sass&logoColor=white)
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+Site da **LiqPay** (maquininha, PIX, link de pagamento, boleto e split de pagamentos).
+A única conversão é o contato pelo WhatsApp.
 
-Boilerplate open source para **sites institucionais estáticos** com Next.js.
+Criado a partir do boilerplate [`nextforge`](https://github.com/romulotunala/nextforge):
+Next.js 16 (App Router), React 19, TypeScript estrito e SCSS Modules, com export estático
+publicado no GitHub Pages.
 
-Pensado para devs que querem começar com uma base enxuta, moderna e fácil de adaptar,
-sem precisar montar estrutura, lint, testes e deploy do zero em todo projeto novo.
+**Endereço atual (temporário):** https://romulotunala.github.io/liqpay-site
 
-## Por que usar
+## Requisitos
 
-- Exportação estática pronta para GitHub Pages.
-- Estrutura organizada para conteúdo, componentes e estilos.
-- SCSS Modules em vez de classes utilitárias.
-- TypeScript estrito desde o início.
-- Lint, testes e hooks de qualidade já configurados.
-- Base preparada para ser clonada, adaptada e publicada rápido.
+- Node >= 24
+- pnpm 11 (fixado em `packageManager`)
 
-## O que vem no boilerplate
-
-| Área | Inclui |
-|---|---|
-| App | Next.js 16 + App Router + `output: 'export'` |
-| UI | Seções institucionais base (`Hero`, `About`, `Services`, `Contact`) |
-| Estilo | SCSS + CSS Modules + tokens e mixins globais |
-| Qualidade | ESLint 10, Stylelint, Husky, lint-staged, commitlint |
-| Testes | Vitest + Testing Library + Playwright |
-| Formulário | react-hook-form + zod + integração opcional com Formspree |
-| Deploy | GitHub Actions + GitHub Pages |
-
-## Ideal para / Não ideal para
-
-### Ideal para
-
-- Sites institucionais e landing pages estáticas.
-- Portfólios e páginas de empresa com poucas rotas.
-- Projetos que fazem deploy no GitHub Pages ou em qualquer host estático.
-- Quem quer SCSS Modules e TypeScript estrito já configurados.
-
-### Não ideal para
-
-- Aplicações que dependem de renderização no servidor (SSR) ou rotas de API.
-- Conteúdo altamente dinâmico que exige backend próprio.
-- Projetos que precisam de recursos que não funcionam com `output: 'export'`.
-
-## Stack
-
-| Item | Versão |
-|---|---|
-| Next.js | 16.x |
-| React | 19 |
-| TypeScript | 5 |
-| Node.js | 24+ |
-| Estilos | SCSS + CSS Modules |
-| Testes | Vitest + Playwright |
-
-## Começando
-
-### Usando como template
-
-1. Clique em **Use this template** no GitHub.
-2. Crie um novo repositório a partir dele.
-3. Clone o projeto gerado.
-4. Instale as dependências.
+## Rodando localmente
 
 ```bash
 pnpm install
-pnpm dev
+pnpm dev        # http://localhost:3000
 ```
 
-### Rodando localmente
-
-```bash
-pnpm install
-pnpm dev
-```
-
-Abra `http://localhost:3000`.
+Localmente o site roda na raiz (`basePath` vazio). Nenhuma variável de ambiente é obrigatória.
 
 ## Scripts
 
 ```bash
 pnpm dev          # desenvolvimento
-pnpm build        # build estático em out/
+pnpm build        # export estático em out/
 pnpm lint         # ESLint + Stylelint
-pnpm lint:fix     # corrige problemas automáticos
-pnpm test         # testes unitários
-pnpm test:e2e     # testes end-to-end
+pnpm lint:fix     # corrige o que for automático
+pnpm typecheck    # tsc --noEmit
+pnpm test         # testes unitários (Vitest)
+pnpm test:e2e     # build próprio com basePath + testes E2E (Playwright)
 ```
 
-## Pontos de customização
+Teste E2E isolado, reaproveitando o último `build:e2e`:
+`pnpm exec playwright test e2e/<arquivo>.spec.ts -g "<nome>"`.
 
-Os arquivos abaixo concentram quase tudo que costuma mudar de um projeto para outro:
+## Variáveis de ambiente
 
-- `src/content/home.ts`: textos principais da home
-- `src/app/layout.tsx`: metadados globais da aplicação
-- `next.config.ts`: `repoName` e comportamento de export estático
-- `src/styles/abstracts/_variables.scss`: tokens visuais
-- `src/components/sections/*`: estrutura e composição das seções
+| Variável | Uso | Onde é definida |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | URL pública; dela sai o `basePath` | CI: `base_url` do `actions/configure-pages`. Local: não definir |
+| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | `umami` ou `none` (padrão) | Variável do repositório (Settings → Variables) |
+| `NEXT_PUBLIC_ANALYTICS_ID` | ID do site no Umami | Variável do repositório (Settings → Variables) |
 
-## Formulário de contato
+Sem as variáveis de analytics, nenhum script de analytics é carregado.
 
-O formulário funciona em **modo demo** por padrão. Para ativar envio real com Formspree:
+## URL e `basePath`
 
-1. Crie um formulário em https://formspree.io
-2. Copie o endpoint fornecido no painel
-3. Crie um arquivo `.env.local` com:
+No GitHub Pages o site fica em `/liqpay-site`. O `basePath` é derivado da URL pública em
+`src/config/url.ts` e nunca é escrito no código.
 
-```bash
-NEXT_PUBLIC_FORMSPREE_ENDPOINT=https://formspree.io/f/xxxxabcd
-```
+O E2E roda com o mesmo prefixo de produção: `pnpm test:e2e` faz um build próprio e serve uma
+cópia do `out/` em `.e2e-site/liqpay-site/`. Um `pnpm build` comum não serve para o E2E.
 
-Sem essa variável, o componente informa visualmente que o envio real não está ativo.
+## Deploy
 
-## Estrutura do projeto
+Push na `main` dispara o workflow `.github/workflows/deploy.yml`: lint → typecheck → test →
+build → publicação no GitHub Pages. Em **Settings → Pages**, a fonte deve ser **GitHub
+Actions**.
 
-```text
-src/
-├── app/               # App Router, layout e sitemap
-├── components/
-│   ├── sections/      # blocos de página
-│   └── ui/            # componentes reutilizáveis
-├── content/           # conteúdo estático editável
-├── lib/               # lógica compartilhada por domínio
-├── styles/            # SCSS global, tokens e base visual
-└── tests/             # setup e testes unitários
-```
+**Não apague `public/.nojekyll`**: sem ele, o GitHub Pages não publica a pasta `_next/` e o
+site sobe sem CSS e sem JS.
 
-## Deploy no GitHub Pages
+### Migrar para domínio próprio
 
-1. Ajuste `repoName` em `next.config.ts` para o nome do seu repositório.
-2. Faça push para `main`.
-3. No GitHub, ative **Settings → Pages → Source: GitHub Actions**.
+1. Configurar o domínio em **Settings → Pages** e o DNS no provedor do domínio. O `basePath`
+   passa a ser vazio sozinho, sem mudança de código.
+2. Atualizar o domínio no cadastro do Umami.
 
-O workflow já está configurado para build e deploy do site estático.
+## Git
 
-## Extensões possíveis
-
-Algumas evoluções naturais para projetos derivados desse template:
-
-- i18n com `next-intl`
-- CMS headless
-- analytics privacy-friendly
-- animações com `motion`
-- Storybook para catálogo de componentes
-
-## Contribuição
-
-Contribuições são bem-vindas, especialmente melhorias que tornem o template mais reutilizável,
-claro e fácil de manter.
-
-Leia [CONTRIBUTING.md](CONTRIBUTING.md) para o fluxo de contribuição.
-
-## Licença
-
-MIT
+Commits seguem Conventional Commits (validados pelo commitlint no Husky), com a descrição em
+português.

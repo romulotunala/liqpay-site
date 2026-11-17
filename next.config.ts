@@ -1,10 +1,9 @@
 import type { NextConfig } from 'next';
-
-const repoName = 'nextforge'; // ajustar por projeto
+import { basePath } from './src/config/url';
 
 const nextConfig: NextConfig = {
   output: 'export',
-  basePath: process.env.NODE_ENV === 'production' ? `/${repoName}` : '',
+  basePath,
   images: { unoptimized: true },
 };
 

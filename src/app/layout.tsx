@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'nextforge',
-  description: 'Boilerplate para sites institucionais estáticos com Next.js.',
+  title: 'LiqPay – Maquininha, PIX e split de pagamentos',
+  description: 'Receba suas vendas com segurança, dinheiro na conta no dia seguinte e atendimento '
+    + 'humano 24h. Maquininha, PIX, link de pagamento, boleto e split.',
 };
 
 export default function RootLayout({

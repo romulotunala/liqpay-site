@@ -17,11 +17,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      NEXT_PUBLIC_FORMSPREE_ENDPOINT: ${{ vars.NEXT_PUBLIC_FORMSPREE_ENDPOINT }}
+      NEXT_PUBLIC_ANALYTICS_PROVIDER: ${{ vars.NEXT_PUBLIC_ANALYTICS_PROVIDER }}
+      NEXT_PUBLIC_ANALYTICS_ID: ${{ vars.NEXT_PUBLIC_ANALYTICS_ID }}
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/configure-pages@v5
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      # O basePath sai desta URL. Sem ela, o site subiria sem CSS e sem JS.
+      - name: Define a URL pública do site
+        env:
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
+        run: |
+          if [ -z "$PAGES_BASE_URL" ]; then
+            echo "::error::configure-pages não retornou base_url; o build sairia sem basePath."
+            exit 1
+          fi
+          echo "NEXT_PUBLIC_SITE_URL=$PAGES_BASE_URL" >> "$GITHUB_ENV"
 
       - uses: pnpm/action-setup@v4
         with:
@@ -29,7 +42,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          # LTS mais nova; o mínimo suportado (engines e .node-version) continua sendo o 24.
+          node-version: 26
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile

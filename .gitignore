@@ -19,6 +19,7 @@
 # next.js
 /.next/
 /out/
+/.e2e-site/
 
 # production
 /build
@@ -43,3 +44,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# documentação interna da LiqPay e instruções do Claude Code (só locais; o repositório é público)
+/CLAUDE.md
+/docs/

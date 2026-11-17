@@ -1,4 +1,17 @@
+import { existsSync } from 'node:fs';
 import { defineConfig, devices } from '@playwright/test';
+import { E2E_SERVE_DIR, E2E_SITE_URL } from './e2e/site-url';
+
+if (!existsSync(E2E_SERVE_DIR)) {
+  throw new Error(
+    `A pasta ${E2E_SERVE_DIR}/ não existe. Rode "pnpm test:e2e" (ou "pnpm build:e2e" antes de `
+    + '"pnpm exec playwright test"). Um "pnpm build" comum não serve para o E2E.',
+  );
+}
+
+// A barra final faz as rotas relativas dos testes ('./', 'solucoes') ficarem dentro do basePath.
+const baseURL = `${E2E_SITE_URL}/`;
+const { port } = new URL(E2E_SITE_URL);
 
 export default defineConfig({
   testDir: './e2e',
@@ -8,7 +21,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL,
     trace: 'on-first-retry',
   },
   projects: [
@@ -18,8 +31,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm exec serve out -p 3000',
-    port: 3000,
+    // --no-port-switching: com a porta ocupada (ex.: pnpm dev), o serve falharia em silêncio
+    // numa porta aleatória e o Playwright esperaria a URL até estourar o tempo.
+    command: `pnpm exec serve ${E2E_SERVE_DIR} -p ${port} --no-port-switching`,
+    url: baseURL,
     reuseExistingServer: !process.env.CI,
   },
 });

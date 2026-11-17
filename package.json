@@ -1,5 +1,5 @@
 {
-  "name": "nextforge",
+  "name": "liqpay-site",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -14,16 +14,15 @@
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.scss\" --fix",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test",
+    "build:e2e": "node scripts/build-e2e.ts",
+    "test:e2e": "pnpm build:e2e && playwright test",
     "prepare": "husky"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.4.0",
+    "lucide-react": "^1.73.0",
     "next": "16.2.10",
     "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-hook-form": "^7.81.0",
-    "zod": "^4.4.3"
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
@@ -46,6 +45,7 @@
     "lint-staged": "^17.0.8",
     "sass": "^1.101.0",
     "serve": "^14.2.6",
+    "sharp": "^0.35.5",
     "stylelint": "^17.14.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "typescript": "^5",
