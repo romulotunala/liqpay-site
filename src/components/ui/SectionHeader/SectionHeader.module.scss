@@ -1,0 +1,41 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  margin-bottom: $spacing-12;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.start {
+  align-items: flex-start;
+  text-align: start;
+}
+
+.center {
+  align-items: center;
+  text-align: center;
+}
+
+.eyebrow {
+  @include eyebrow;
+}
+
+.title {
+  max-inline-size: 24ch;
+  color: var(--text);
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  font-size: var(--text-lead);
+  line-height: $line-height-lead;
+  color: var(--text-muted);
+}

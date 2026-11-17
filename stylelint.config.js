@@ -9,5 +9,9 @@ export default {
     'at-rule-empty-line-before': null,
     // Permite vendor prefixes necessários para compatibilidade
     'property-no-vendor-prefix': null,
+    // :global() é do CSS Modules (ex.: estilizar pelo tom da seção ancestral)
+    'selector-pseudo-class-no-unknown': [true, { ignorePseudoClasses: ['global'] }],
+    // ::details-content ainda não está na lista do Stylelint (animação do Accordion)
+    'selector-pseudo-element-no-unknown': [true, { ignorePseudoElements: ['details-content'] }],
   },
 };

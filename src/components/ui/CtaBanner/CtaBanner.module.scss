@@ -1,0 +1,27 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-6;
+  padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-raised);
+  background-image: var(--gradient-emerald-glow);
+  text-align: center;
+}
+
+.title {
+  max-inline-size: 24ch;
+  font-size: var(--text-h2);
+  color: var(--text);
+}
+
+.description {
+  font-size: var(--text-lead);
+  line-height: $line-height-lead;
+  color: var(--text-muted);
+}

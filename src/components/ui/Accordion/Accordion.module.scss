@@ -1,0 +1,76 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+
+.item {
+  border-bottom: 1px solid var(--border);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-6;
+  padding-block: $spacing-6;
+  cursor: pointer;
+  list-style: none;
+  font-family: $font-heading;
+  font-size: var(--text-h3);
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-h3;
+  color: var(--text);
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--accent);
+  transition: transform var(--duration-base) var(--ease-in-out);
+
+  .item[open] & {
+    transform: rotate(45deg);
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+.answer {
+  padding-bottom: $spacing-6;
+  color: var(--text-muted);
+}
+
+// Sem suporte a ::details-content, o item abre sem animação, o que é aceitável.
+@supports selector(::details-content) {
+  .item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size var(--duration-base) var(--ease-in-out),
+      content-visibility var(--duration-base) var(--ease-in-out);
+    transition-behavior: allow-discrete;
+  }
+
+  .item[open]::details-content {
+    block-size: auto;
+  }
+
+  @include reduced-motion {
+    .item::details-content {
+      transition: none;
+    }
+  }
+}

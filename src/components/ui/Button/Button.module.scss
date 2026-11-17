@@ -1,0 +1,148 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  font-family: $font-body;
+  max-width: 100%;
+  font-weight: $font-weight-semibold;
+
+  // Rótulos longos ("Falar com um especialista no WhatsApp") quebram em telas de 360px.
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @include reduced-motion {
+    transition-property: background-color, border-color, color, box-shadow;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.arrow {
+  transition: transform var(--duration-fast) var(--ease-out);
+
+  .button:hover & {
+    transform: translateX(4px);
+  }
+
+  @include reduced-motion {
+    transition: none;
+
+    .button:hover & {
+      transform: none;
+    }
+  }
+}
+
+// Tamanhos (ghost é texto: sem altura fixa nem padding)
+.md:not(.ghost) {
+  min-height: 48px;
+  padding: $spacing-3 $spacing-6;
+  font-size: var(--text-body);
+}
+
+.lg:not(.ghost) {
+  min-height: 56px;
+  padding: $spacing-3 $spacing-6;
+  font-size: var(--text-lead);
+
+  @include respond-to(sm) {
+    padding-inline: $spacing-8;
+  }
+}
+
+// Variantes
+.primary {
+  background-color: var(--color-gold-400);
+  color: var(--color-ink-950);
+
+  &:hover {
+    background-color: var(--color-gold-300);
+    box-shadow: 0 8px 24px rgb(212 175 99 / 30%);
+    transform: translateY(-1px);
+  }
+
+  @include reduced-motion {
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// Claro: verde sólido. Escuro: contorno dourado.
+.secondary {
+  background-color: var(--color-emerald-700);
+  color: var(--color-white);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-emerald-700), black 8%);
+  }
+
+  :global([data-tone='dark']) & {
+    background-color: transparent;
+    border-color: var(--color-gold-400);
+    color: var(--color-gold-400);
+
+    &:hover {
+      background-color: rgb(212 175 99 / 10%);
+    }
+  }
+}
+
+.ghost {
+  padding: 0;
+  background-color: transparent;
+  color: var(--accent);
+  font-size: var(--text-body);
+
+  // Sublinhado que cresce da esquerda no hover.
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -4px;
+    height: 1px;
+    background-color: currentcolor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+  }
+
+  @include reduced-motion {
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+.visuallyHidden {
+  @include visually-hidden;
+}

@@ -1,0 +1,97 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  height: 100%;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-raised);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+
+  // Escuro: vidro com borda superior dourada, sem sombra.
+  :global([data-tone='dark']) & {
+    background-color: rgb(14 31 23 / 70%);
+    box-shadow: none;
+    backdrop-filter: blur(12px);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -1px -1px auto;
+      height: 1px;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      background-image: var(--gradient-gold-metallic);
+    }
+  }
+}
+
+.clickable:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
+
+  :global([data-tone='dark']) & {
+    box-shadow: none;
+  }
+
+  @include reduced-motion {
+    transform: none;
+  }
+}
+
+.clickable:hover .ring {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.media {
+  margin-bottom: $spacing-2;
+}
+
+.title {
+  font-size: var(--text-h3);
+  color: var(--text);
+}
+
+// O ::after do link cobre o cartão todo: um único link, com o título como nome acessível.
+.link {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::after {
+    @include focus-ring;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  color: var(--text-muted);
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: $spacing-2;
+}
+
+.visuallyHidden {
+  @include visually-hidden;
+}

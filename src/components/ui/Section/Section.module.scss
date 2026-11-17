@@ -1,0 +1,34 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.section {
+  position: relative;
+
+  // Cria um contexto próprio: o fundo decorativo (z-index -1) fica atrás do conteúdo, mas
+  // na frente da cor da seção.
+  isolation: isolate;
+  padding-block: $section-padding-block;
+  background-color: var(--surface);
+  color: var(--text);
+
+  &[data-tone='dark']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    // Caminho relativo: o bundler emite o arquivo com o basePath; '/…' não receberia o prefixo.
+    background-image: url('../../../assets/network-pattern.svg');
+    background-size: 200px 200px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 0%, transparent 100%);
+    pointer-events: none;
+  }
+}
+
+.glow {
+  background-image: var(--gradient-emerald-glow);
+}
+
+.container {
+  @include container;
+}

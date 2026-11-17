@@ -1,0 +1,8 @@
+.placeholder {
+  width: 100%;
+
+  // A borda mantém a forma visível também dentro de um Card, que usa a mesma superfície.
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-raised);
+}

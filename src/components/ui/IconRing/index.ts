@@ -1,0 +1,1 @@
+export { IconRing } from './IconRing';

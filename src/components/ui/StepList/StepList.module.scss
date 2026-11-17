@@ -1,0 +1,71 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+$number-size: 48px;
+
+.list {
+  position: relative;
+  display: grid;
+  gap: $spacing-10;
+
+  @include respond-to(lg) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: $grid-gap;
+  }
+
+  // Linha que liga os números: vertical à esquerda no mobile, horizontal no desktop.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc($number-size / 2);
+    width: 1px;
+    background-color: var(--border);
+
+    @include respond-to(lg) {
+      inset: calc($number-size / 2) 0 auto;
+      width: auto;
+      height: 1px;
+    }
+  }
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: $number-size 1fr;
+  gap: $spacing-2 $spacing-4;
+
+  @include respond-to(lg) {
+    grid-template-columns: 1fr;
+    row-gap: $spacing-4;
+  }
+}
+
+.number {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: $number-size;
+  height: $number-size;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background-color: var(--surface);
+  font-family: $font-heading;
+  font-weight: $font-weight-semibold;
+  color: var(--accent);
+
+  @include respond-to(lg) {
+    grid-row: auto;
+  }
+}
+
+.title {
+  font-size: var(--text-h3);
+  color: var(--text);
+}
+
+.description {
+  color: var(--text-muted);
+}
