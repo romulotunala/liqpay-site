@@ -31,8 +31,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // --no-port-switching: com a porta ocupada (ex.: pnpm dev), o serve falharia em silêncio
-    // numa porta aleatória e o Playwright esperaria a URL até estourar o tempo.
+    // --no-port-switching: com a porta ocupada, o serve não sobe numa porta aleatória (onde o
+    // Playwright nunca o encontraria).
     command: `pnpm exec serve ${E2E_SERVE_DIR} -p ${port} --no-port-switching`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,

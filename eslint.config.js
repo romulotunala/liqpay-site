@@ -5,7 +5,17 @@ import stylistic from '@stylistic/eslint-plugin';
 import next from '@next/eslint-plugin-next';
 
 export default defineConfig(
-  { ignores: ['out/', '.next/', 'node_modules/', 'next-env.d.ts'] },
+  {
+    ignores: [
+      'out/',
+      '.next/',
+      '.e2e-site/',
+      'test-results/',
+      'playwright-report/',
+      'node_modules/',
+      'next-env.d.ts',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

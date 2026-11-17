@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!--
+    Ladrilho repetível do padrão de rede das seções escuras.
+    Cores fixas porque CSS custom properties não alcançam um SVG usado como background-image:
+    linhas em ink-800 (#163026) e pontos em gold-400 (#D4AF63) a 40%.
+    As linhas que cruzam as bordas têm a continuação no lado oposto, para emendar sem corte.
+  -->
+  <g fill="none" stroke="#163026" stroke-width="1" stroke-linecap="round">
+    <path d="M20 30 L90 15 L160 50" />
+    <path d="M20 30 L60 100 L130 120 L185 170" />
+    <path d="M90 15 L60 100 L30 165 L100 185 L130 120 L160 50" />
+    <path d="M100 185 L185 170" />
+    <path d="M160 50 L220 30 M-40 50 L20 30" />
+    <path d="M185 170 L230 165 M-15 170 L30 165" />
+    <path d="M100 185 L90 215 M100 -15 L90 15" />
+  </g>
+  <g fill="#D4AF63" fill-opacity="0.4">
+    <circle cx="20" cy="30" r="1.75" />
+    <circle cx="90" cy="15" r="1.75" />
+    <circle cx="160" cy="50" r="1.75" />
+    <circle cx="60" cy="100" r="1.75" />
+    <circle cx="130" cy="120" r="1.75" />
+    <circle cx="185" cy="170" r="1.75" />
+    <circle cx="30" cy="165" r="1.75" />
+    <circle cx="100" cy="185" r="1.75" />
+  </g>
+</svg>
