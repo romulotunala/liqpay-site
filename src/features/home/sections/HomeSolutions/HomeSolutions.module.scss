@@ -1,5 +1,9 @@
 @use '../../../../styles/abstracts/variables' as *;
 
+.header {
+  margin-block-end: $spacing-12;
+}
+
 .more {
   margin-block-start: $spacing-10;
 }

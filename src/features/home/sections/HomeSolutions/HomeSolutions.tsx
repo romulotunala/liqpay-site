@@ -17,7 +17,7 @@ export function HomeSolutions() {
 
   return (
     <Section tone='white' labelledBy={titleId}>
-      <Reveal>
+      <Reveal className={styles.header}>
         <SectionHeader
           eyebrow='Soluções'
           title='Tudo o que o seu negócio precisa para receber'

@@ -1,11 +1,9 @@
 import { Barcode, Link, QrCode, Split } from 'lucide-react';
-import { Reveal } from '@/components/motion';
 import { Button } from '@/components/ui/Button';
-import { IconRing } from '@/components/ui/IconRing';
 import type { IconComponent } from '@/components/ui/icons';
 import { Section, type SectionTone } from '@/components/ui/Section';
+import { SideHeadingBlock } from '@/components/ui/SideHeadingBlock';
 import type { InternalHref } from '@/types/navigation';
-import styles from './SolutionsList.module.scss';
 
 interface Solution {
   /** Também é a âncora da seção (ex.: /solucoes#pix). */
@@ -58,18 +56,10 @@ function SolutionBlock({ slug, title, description, icon, tone, link }: Readonly<
 
   return (
     <Section tone={tone} id={slug} labelledBy={titleId}>
-      <Reveal className={styles.block}>
-        <div className={styles.heading}>
-          <IconRing icon={icon} />
-          <h2 id={titleId}>{title}</h2>
-        </div>
-        <div className={styles.body}>
-          <p className={styles.description}>{description}</p>
-          {link && (
-            <Button href={link.href} variant='ghost' icon='arrow'>{link.label}</Button>
-          )}
-        </div>
-      </Reveal>
+      <SideHeadingBlock title={title} titleId={titleId} icon={icon}>
+        <p>{description}</p>
+        {link && <Button href={link.href} variant='ghost' icon='arrow'>{link.label}</Button>}
+      </SideHeadingBlock>
     </Section>
   );
 }

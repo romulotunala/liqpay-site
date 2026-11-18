@@ -5,11 +5,9 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
-  margin-bottom: $spacing-12;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+  // Sem margem externa: o espaço até o conteúdo seguinte é decisão do layout da seção. Uma
+  // margem com :last-child falhava dentro de um Reveal, onde o cabeçalho é sempre o último.
 }
 
 .start {

@@ -15,7 +15,7 @@ export function HomeSplitHighlight() {
   return (
     <Section tone='dark' labelledBy={titleId}>
       <div className={styles.layout}>
-        <Reveal>
+        <Reveal className={styles.content}>
           <SectionHeader
             eyebrow='Split de pagamentos'
             title='Pare de pagar imposto sobre o dinheiro dos outros'

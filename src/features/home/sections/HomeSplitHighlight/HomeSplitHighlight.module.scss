@@ -12,6 +12,13 @@
   }
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-8;
+}
+
 .visual img {
   width: 100%;
   height: auto;
