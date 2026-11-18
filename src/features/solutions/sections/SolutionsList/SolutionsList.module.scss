@@ -1,0 +1,34 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+.block {
+  display: grid;
+  gap: $spacing-6;
+
+  @include respond-to(lg) {
+    grid-template-columns: 5fr 7fr;
+    gap: $spacing-16;
+    align-items: start;
+  }
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-4;
+  color: var(--text);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-6;
+}
+
+.description {
+  font-size: var(--text-lead);
+  line-height: $line-height-lead;
+  color: var(--text-muted);
+}

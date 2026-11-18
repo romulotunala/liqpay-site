@@ -1,0 +1,35 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.hero {
+  @include clear-header;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-6;
+}
+
+.title {
+  max-inline-size: 20ch;
+  color: var(--text);
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  max-inline-size: $measure-hero-lead;
+  font-size: var(--text-lead);
+  line-height: $line-height-lead;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+  margin-block-start: $spacing-2;
+}

@@ -1,0 +1,53 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+$marker-size: 8px;
+
+.layout {
+  display: grid;
+  gap: $spacing-12;
+  align-items: center;
+
+  @include respond-to(lg) {
+    grid-template-columns: 5fr 7fr;
+    gap: $spacing-16;
+  }
+}
+
+.visual {
+  display: grid;
+  place-items: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+}
+
+.features {
+  display: grid;
+  gap: $spacing-3;
+
+  @include respond-to(md) {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: $spacing-8;
+  }
+}
+
+// Marcador dourado. No claro usa o dourado escuro (--eyebrow), que tem contraste no marfim.
+.feature {
+  display: flex;
+  gap: $spacing-3;
+  color: var(--text);
+
+  &::before {
+    content: '';
+    flex-shrink: 0;
+    width: $marker-size;
+    height: $marker-size;
+    border-radius: 50%;
+    margin-block-start: calc((1lh - #{$marker-size}) / 2);
+    background-color: var(--eyebrow);
+  }
+}
