@@ -1,0 +1,26 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.skipLink {
+  @include visually-hidden;
+
+  &:focus {
+    position: fixed;
+    top: $spacing-4;
+    left: $spacing-4;
+    z-index: var(--z-skip-link);
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: $spacing-3 $spacing-6;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    border-radius: var(--radius-full);
+    background-color: var(--color-gold-400);
+    color: var(--color-ink-950);
+    font-weight: $font-weight-semibold;
+
+    @include focus-ring;
+  }
+}

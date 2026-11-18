@@ -1,0 +1,53 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+$button-size: 56px;
+
+.frame {
+  position: fixed;
+  right: calc($spacing-4 + env(safe-area-inset-right));
+  bottom: calc($spacing-4 + env(safe-area-inset-bottom));
+  z-index: var(--z-whatsapp);
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    visibility var(--duration-base);
+
+  @include respond-to(md) {
+    right: calc($spacing-6 + env(safe-area-inset-right));
+    bottom: calc($spacing-6 + env(safe-area-inset-bottom));
+  }
+
+  // visibility (e não só opacity): escondido, o botão também sai da ordem do Tab.
+  :global(.js) &:not([data-visible]) {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+.button {
+  display: grid;
+  place-items: center;
+  width: $button-size;
+  height: $button-size;
+  border-radius: var(--radius-full);
+  background-color: var(--color-emerald-700);
+  color: var(--color-white);
+  box-shadow: var(--shadow-lg);
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-emerald-700), black 8%);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.visuallyHidden {
+  @include visually-hidden;
+}

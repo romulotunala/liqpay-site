@@ -1,7 +1,16 @@
 import type { Metadata } from 'next';
 import { Inter, Sora } from 'next/font/google';
 import { AnalyticsListener, AnalyticsScript } from '@/components/analytics';
+import {
+  Footer,
+  Header,
+  MAIN_CONTENT_ID,
+  SkipLink,
+  WhatsAppFloat,
+} from '@/components/layout';
 import { JsClassScript, RevealObserver } from '@/components/motion';
+import { JsonLd } from '@/components/seo';
+import { organizationJsonLd } from '@/lib/seo';
 import '../styles/globals.scss';
 
 const sora = Sora({
@@ -36,7 +45,12 @@ export default function RootLayout({
         <JsClassScript />
       </head>
       <body>
-        {children}
+        <SkipLink />
+        <Header />
+        <main id={MAIN_CONTENT_ID}>{children}</main>
+        <Footer />
+        <WhatsAppFloat />
+        <JsonLd data={organizationJsonLd} />
         <RevealObserver />
         <AnalyticsListener />
         <AnalyticsScript />

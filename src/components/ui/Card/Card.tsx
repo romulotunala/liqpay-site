@@ -2,10 +2,9 @@ import type { AnchorHTMLAttributes, ReactNode } from 'react';
 import type { IconComponent } from '@/components/ui/icons';
 import { IconRing } from '@/components/ui/IconRing';
 import type { AnalyticsAttributes } from '@/lib/analytics/attributes';
+import { NewTabNotice } from '@/components/ui/NewTabNotice';
 import { cn } from '@/lib/cn';
 import styles from './Card.module.scss';
-
-const NEW_TAB_NOTICE = '(abre em nova aba)';
 
 export type CardLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'className' | 'children'>
   & AnalyticsAttributes
@@ -43,12 +42,7 @@ function CardTitle({ title, link }: Pick<CardProps, 'title' | 'link'>) {
   return (
     <a {...link} className={styles.link}>
       {title}
-      {link.target === '_blank' && (
-        <>
-          {' '}
-          <span className={styles.visuallyHidden}>{NEW_TAB_NOTICE}</span>
-        </>
-      )}
+      {link.target === '_blank' && <NewTabNotice />}
     </a>
   );
 }

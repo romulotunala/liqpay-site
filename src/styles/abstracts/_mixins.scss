@@ -12,6 +12,12 @@
   padding-inline: $container-padding-inline;
 }
 
+/// Primeira seção da página: o header fixo fica por cima dela, então o respiro de cima soma
+/// a altura do header.
+@mixin clear-header {
+  padding-block-start: calc(var(--header-height) + #{$section-padding-block});
+}
+
 /// Media query a partir de um breakpoint (mobile-first)
 /// @param {string} $bp - nome do breakpoint: sm | md | lg | xl
 @mixin respond-to($bp) {

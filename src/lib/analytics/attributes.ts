@@ -18,6 +18,9 @@ export type AnalyticsAttributes = Readonly<Partial<Record<AnalyticsAttributeName
 
 const TRACKED_ELEMENT_SELECTOR = `[${ATTRIBUTE.event}]`;
 
+/** Todo link de WhatsApp do site (o Button com `whatsappContext` sempre leva estes atributos). */
+export const WHATSAPP_LINK_SELECTOR = `[${ATTRIBUTE.event}='whatsapp_click']`;
+
 // -----------------------------------------------------------------------------
 // Escrita (componentes de servidor)
 // -----------------------------------------------------------------------------

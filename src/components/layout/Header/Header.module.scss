@@ -1,0 +1,134 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+// O menu completo só cabe ao lado da logo e do CTA a partir daqui.
+$desktop-breakpoint: lg;
+
+// `[data-tone]` no seletor: o tema escuro também define background-color, e esta regra precisa
+// vencer independentemente da ordem em que os CSS chegam.
+.header[data-tone] {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--z-header);
+
+  // Padrão (inclusive sem JavaScript): fundo sólido, legível sobre qualquer seção.
+  border-bottom: 1px solid var(--border);
+  background-color: color-mix(in srgb, var(--color-ink-950) 80%, transparent);
+  backdrop-filter: blur(16px);
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    backdrop-filter var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+
+  // Com JavaScript: transparente sobre o Hero até a página rolar.
+  :global(.js) &:not([data-scrolled]) {
+    border-bottom-color: transparent;
+    background-color: transparent;
+    backdrop-filter: none;
+  }
+
+  // Quem navega pelo teclado dentro do header não o perde de vista.
+  &[data-hidden]:not(:focus-within) {
+    transform: translateY(-100%);
+  }
+
+  @include reduced-motion {
+    transition-property: background-color, border-color, backdrop-filter;
+  }
+}
+
+.inner {
+  @include container;
+
+  display: flex;
+  align-items: center;
+  gap: $spacing-6;
+  height: var(--header-height);
+
+  @include respond-to(xl) {
+    gap: $spacing-8;
+  }
+}
+
+.nav,
+.cta {
+  display: none;
+
+  @include respond-to($desktop-breakpoint) {
+    display: flex;
+  }
+}
+
+.nav {
+  flex: 1;
+  justify-content: center;
+}
+
+.navList {
+  display: flex;
+  gap: $spacing-4;
+
+  // Em 1024px os 6 itens, a logo e o CTA dividem a linha com folga curta.
+  @include respond-to(xl) {
+    gap: $spacing-6;
+  }
+}
+
+.cta {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.navLink {
+  position: relative;
+  display: inline-block;
+  padding-block: $spacing-2;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-small);
+  font-weight: $font-weight-medium;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  // Sublinhado dourado de 2px: cheio no item ativo, crescendo no hover.
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    background-color: var(--color-gold-400);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  &:hover,
+  &[aria-current='page'] {
+    color: var(--text);
+  }
+
+  &:hover::after,
+  &[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  @include reduced-motion {
+    &::after {
+      transition: none;
+    }
+  }
+}
+
+.mobileMenu {
+  margin-inline-start: auto;
+
+  @include respond-to($desktop-breakpoint) {
+    display: none;
+  }
+}

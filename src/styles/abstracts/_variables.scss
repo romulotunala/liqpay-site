@@ -132,6 +132,9 @@ $spacing-24: 6rem;
 $container-max: 1200px;
 $container-padding-inline: clamp(1rem, 4vw, 2rem);
 $section-padding-block: clamp(4rem, 8vw, 8rem);
+
+// Header fixo: a primeira seção de cada página reserva este espaço (mixin clear-header).
+$header-height: 4.5rem;
 $grid-columns-mobile: 4;
 $grid-columns-desktop: 12;
 $grid-gap: clamp(1rem, 2vw, 1.5rem);

@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react';
 import { ICON_SIZE, ICON_STROKE_WIDTH, WhatsAppIcon } from '@/components/ui/icons';
+import { NewTabNotice } from '@/components/ui/NewTabNotice';
 import type { AnalyticsLocation } from '@/lib/analytics';
 import { whatsappClickAttributes } from '@/lib/analytics/attributes';
 import { cn } from '@/lib/cn';
@@ -12,8 +13,6 @@ import styles from './Button.module.scss';
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 export type ButtonSize = 'md' | 'lg';
 export type ButtonIcon = 'whatsapp' | 'arrow' | 'none';
-
-const NEW_TAB_NOTICE = '(abre em nova aba)';
 
 interface ButtonStyleProps {
   readonly variant?: ButtonVariant;
@@ -93,8 +92,7 @@ function WhatsAppButton({
       className={buttonClassName({ variant, size, className, children })}
     >
       <ButtonContent icon={icon}>{children}</ButtonContent>
-      {' '}
-      <span className={styles.visuallyHidden}>{NEW_TAB_NOTICE}</span>
+      <NewTabNotice />
     </a>
   );
 }

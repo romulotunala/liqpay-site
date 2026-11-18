@@ -60,6 +60,7 @@
 
   --stagger: #{$stagger};
   --enter-stagger: #{$enter-stagger};
+  --header-height: #{$header-height};
   --reveal-distance: #{$reveal-distance};
 
   @include theme($default-theme);

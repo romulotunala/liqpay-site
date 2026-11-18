@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { createPathHelpers } from '@/lib/paths';
-import { createMetadataBuilder } from '@/lib/seo';
+import { createMetadataBuilder, createOrganizationJsonLd } from '@/lib/seo';
 
-const buildMetadata = createMetadataBuilder(createPathHelpers({
+const pathHelpers = createPathHelpers({
   siteUrl: 'https://exemplo.github.io/liqpay-site',
   basePath: '/liqpay-site',
-}));
+});
+const buildMetadata = createMetadataBuilder(pathHelpers);
 
 const metadata = buildMetadata({
   title: 'Título da página',
@@ -35,5 +36,18 @@ describe('buildMetadata', () => {
         }),
       ],
     });
+  });
+});
+
+describe('createOrganizationJsonLd', () => {
+  const organization = createOrganizationJsonLd(pathHelpers);
+
+  it('gera url e logo absolutas com o basePath', () => {
+    expect(organization.url).toBe('https://exemplo.github.io/liqpay-site/');
+    expect(organization.logo).toMatch(/^https:\/\/exemplo\.github\.io\/liqpay-site\/images\//);
+  });
+
+  it('liga a organização ao perfil do Instagram', () => {
+    expect(organization.sameAs).toEqual(['https://www.instagram.com/liqpaybank']);
   });
 });

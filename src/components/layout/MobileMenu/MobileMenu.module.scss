@@ -1,0 +1,142 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+$entrance-offset: $spacing-2;
+$menu-items: 6;
+$icon-button-size: 48px;
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: $icon-button-size;
+  height: $icon-button-size;
+  border-radius: var(--radius-full);
+  color: var(--text);
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background-color: var(--surface-raised);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// O popover padrão é uma caixa centralizada com borda: aqui vira tela cheia. O `display` só
+// é definido aberto, senão anularia o `display: none` que o navegador aplica ao fechado.
+.panel {
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0 0 $spacing-10;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  background-color: var(--surface);
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(-$entrance-offset);
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out),
+    overlay var(--duration-base) allow-discrete,
+    display var(--duration-base) allow-discrete;
+
+  &:popover-open {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: none;
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(-$entrance-offset);
+    }
+  }
+
+  @include reduced-motion {
+    transform: none;
+    transition: none;
+
+    &:popover-open {
+      @starting-style {
+        transform: none;
+      }
+    }
+  }
+}
+
+.panelHeader {
+  @include container;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+}
+
+.nav {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-10;
+  padding-block-start: $spacing-8;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+// Os links entram em sequência, logo depois do painel.
+.item {
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+
+  .panel:popover-open & {
+    @starting-style {
+      opacity: 0;
+      transform: translateY($entrance-offset);
+    }
+  }
+
+  @for $index from 2 through $menu-items {
+    &:nth-child(#{$index}) {
+      transition-delay: calc(var(--stagger) * #{$index - 1});
+    }
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+.link {
+  display: inline-block;
+  padding-block: $spacing-2;
+  border-radius: var(--radius-sm);
+  font-family: $font-heading;
+  font-size: var(--text-h3);
+  font-weight: $font-weight-semibold;
+  color: var(--text);
+
+  &[aria-current='page'] {
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.visuallyHidden {
+  @include visually-hidden;
+}

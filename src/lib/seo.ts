@@ -47,3 +47,21 @@ export function createMetadataBuilder({ absoluteUrl }: Pick<PathHelpers, 'absolu
 }
 
 export const buildMetadata = createMetadataBuilder({ absoluteUrl });
+
+// Logo quadrada o bastante para os resultados de busca (o mínimo recomendado é 112×112).
+const ORGANIZATION_LOGO_PATH = '/images/logo-full@2x.webp';
+
+export function createOrganizationJsonLd({ absoluteUrl }: Pick<PathHelpers, 'absoluteUrl'>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: siteConfig.name,
+    legalName: siteConfig.legalName,
+    url: absoluteUrl('/'),
+    logo: absoluteUrl(ORGANIZATION_LOGO_PATH),
+    email: siteConfig.contact.email,
+    sameAs: [siteConfig.contact.instagram.url],
+  } as const;
+}
+
+export const organizationJsonLd = createOrganizationJsonLd({ absoluteUrl });
