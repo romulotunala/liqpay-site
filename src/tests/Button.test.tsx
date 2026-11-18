@@ -57,7 +57,18 @@ describe('Button', () => {
 
       expect(link).toHaveAttribute('target', '_blank');
       expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-      expect(link).toHaveAccessibleName('Quero minha maquininha (abre em nova aba)');
+      expect(link).toHaveAccessibleName('Quero minha maquininha no WhatsApp (abre em nova aba)');
+    });
+
+    it('não repete o canal quando o rótulo já cita o WhatsApp', () => {
+      render(
+        <Button whatsappContext='general' analyticsLocation='cta_banner'>
+          Chamar no WhatsApp
+        </Button>,
+      );
+
+      expect(screen.getByRole('link'))
+        .toHaveAccessibleName('Chamar no WhatsApp (abre em nova aba)');
     });
 
     it('adiciona os atributos de analytics do whatsapp_click', () => {

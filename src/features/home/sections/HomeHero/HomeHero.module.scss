@@ -1,0 +1,112 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+// Quanto a imagem avança sobre a seção seguinte (só no mobile).
+$overlap-mobile: 2rem;
+
+// Maior que o original (331px) de propósito: é provisória, para aprovação do cliente, e perde
+// nitidez. A definitiva deve ter ao menos o dobro de $image-max-width para telas retina.
+$image-max-width: 560px;
+
+// z-index: a maquininha invade a seção seguinte e precisa ficar por cima dela.
+// overflow-x: clip corta qualquer sobra lateral sem cortar o avanço para baixo.
+.hero {
+  @include clear-header;
+
+  z-index: 1;
+  overflow-x: clip;
+}
+
+.layout {
+  display: grid;
+  gap: $spacing-12;
+  align-items: center;
+
+  @include respond-to(lg) {
+    grid-template-columns: repeat(12, 1fr);
+    gap: $grid-gap;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  @include respond-to(lg) {
+    grid-column: 1 / span 7;
+  }
+}
+
+.title {
+  font-size: var(--text-display);
+  line-height: $line-height-display;
+  color: var(--text);
+}
+
+// Único destaque de cor em título no site.
+.highlight {
+  background-image: var(--gradient-gold-metallic);
+  background-clip: text;
+  color: transparent;
+}
+
+.lead {
+  max-inline-size: $measure-hero-lead;
+  font-size: var(--text-lead);
+  line-height: $line-height-lead;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+  margin-block-start: $spacing-2;
+}
+
+.visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-block-end: calc(-1 * ($overlap-mobile + $section-padding-block));
+
+  // Desktop: centralizada ao lado do texto, inteira na primeira tela. O avanço sobre a seção
+  // seguinte fica só no mobile, onde a imagem vem abaixo do texto.
+  @include respond-to(lg) {
+    grid-column: 8 / -1;
+    margin-block-end: 0;
+  }
+}
+
+.device {
+  position: relative;
+  width: min(90%, 400px);
+
+  // Maior que a coluna, como pede a composição: avança sobre o espaço entre as colunas.
+  @include respond-to(lg) {
+    width: 125%;
+    max-width: $image-max-width;
+  }
+
+  // Sombra esverdeada no "chão", para dar profundidade.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 10% -6%;
+    z-index: -1;
+    height: 12%;
+    border-radius: 50%;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--color-glow-400) 35%, transparent),
+      transparent
+    );
+    filter: blur(12px);
+  }
+}
+
+.image {
+  width: 100%;
+  height: auto;
+}

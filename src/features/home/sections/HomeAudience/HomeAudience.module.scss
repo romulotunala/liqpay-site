@@ -1,0 +1,39 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+.layout {
+  display: grid;
+  gap: $spacing-10;
+  align-items: center;
+
+  @include respond-to(lg) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-16;
+  }
+}
+
+.chips {
+  display: grid;
+  gap: $spacing-3;
+
+  @include respond-to(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-4 $spacing-6;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-raised);
+  font-weight: $font-weight-medium;
+  color: var(--text);
+}
+
+.chipIcon {
+  flex-shrink: 0;
+  color: var(--accent);
+}

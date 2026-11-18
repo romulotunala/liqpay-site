@@ -13,9 +13,10 @@
   max-width: 100%;
   font-weight: $font-weight-semibold;
 
-  // Rótulos longos ("Falar com um especialista no WhatsApp") quebram em telas de 360px.
+  // Rótulos longos ("Falar com um especialista no WhatsApp") quebram em telas de 360px. Na
+  // quebra, o texto alinha à esquerda, junto do ícone; com uma linha, o flex já centraliza.
   line-height: 1.25;
-  text-align: center;
+  text-align: start;
   cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--ease-out),
@@ -141,4 +142,8 @@
       transition: none;
     }
   }
+}
+
+.visuallyHidden {
+  @include visually-hidden;
 }

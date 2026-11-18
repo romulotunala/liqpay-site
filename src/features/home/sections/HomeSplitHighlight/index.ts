@@ -1,0 +1,1 @@
+export { HomeSplitHighlight } from './HomeSplitHighlight';

@@ -43,6 +43,8 @@ interface ButtonAsLinkProps extends ButtonStyleProps, AnchorAttributes {
 }
 
 interface ButtonAsWhatsAppProps extends ButtonStyleProps, AnchorAttributes {
+  /** Texto puro: o botão completa o nome acessível com o canal quando o rótulo não o cita. */
+  readonly children: string;
   readonly whatsappContext: WhatsAppContext;
   /** Obrigatório: todo CTA de WhatsApp informa de onde veio o clique. */
   readonly analyticsLocation: AnalyticsLocation;
@@ -72,6 +74,25 @@ function ButtonContent({ icon, children }: Pick<ButtonStyleProps, 'icon' | 'chil
   );
 }
 
+const WHATSAPP_MENTION = /whatsapp/i;
+
+/**
+ * O ícone já mostra o WhatsApp, então o rótulo visível pode omitir o canal ("Pedir uma
+ * proposta"). Para leitor de tela o ícone é decorativo: o canal entra como texto oculto.
+ */
+function WhatsAppChannelNotice({ label }: Readonly<{ label: string }>) {
+  if (WHATSAPP_MENTION.test(label)) {
+    return null;
+  }
+
+  return (
+    <>
+      {' '}
+      <span className={styles.visuallyHidden}>no WhatsApp</span>
+    </>
+  );
+}
+
 function WhatsAppButton({
   variant,
   size,
@@ -92,6 +113,7 @@ function WhatsAppButton({
       className={buttonClassName({ variant, size, className, children })}
     >
       <ButtonContent icon={icon}>{children}</ButtonContent>
+      <WhatsAppChannelNotice label={children} />
       <NewTabNotice />
     </a>
   );

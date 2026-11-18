@@ -50,6 +50,13 @@ const LOGO_VARIANTS: readonly LogoVariant[] = [
 ];
 
 const SYMBOL_SOURCE = 'LiqPay_simbolo.png';
+
+// Imagens geradas no tamanho do original, sem @2x: o original não tem resolução para isso.
+// Exibidas menores que o arquivo, ficam nítidas em telas 1x e aceitáveis em 2x.
+const NATIVE_IMAGES = [
+  // Símbolo com a maquininha: cartão "Maquininha LiqPay", até o mockup chegar.
+  { source: SYMBOL_SOURCE, name: 'logo-symbol-large' },
+] as const;
 const FULL_LOGO_SOURCE = 'Logo_LiqPay_sem_fundo.png';
 
 const ICON_SIZE = 512;
@@ -171,6 +178,12 @@ async function generateLogoVariant(variant: LogoVariant): Promise<void> {
   await Promise.all(RETINA_SCALES.map((scale) => writeLogoAtScale(variant, image, scale)));
 }
 
+async function generateNativeImage({ source, name }: (typeof NATIVE_IMAGES)[number]) {
+  const image = await loadTrimmed(source);
+  const buffer = await sharp(image.buffer).webp(WEBP_OPTIONS).toBuffer();
+  writeOutput(join(IMAGES_DIR, `${name}.webp`), buffer);
+}
+
 function createCanvas(width: number, height: number, background: Color): Sharp {
   return sharp({ create: { width, height, channels: 4, background } });
 }
@@ -252,6 +265,7 @@ async function main(): Promise<void> {
 
   await Promise.all([
     ...LOGO_VARIANTS.map(generateLogoVariant),
+    ...NATIVE_IMAGES.map(generateNativeImage),
     generateIcons(),
     generateOgImage(),
   ]);

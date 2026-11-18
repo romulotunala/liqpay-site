@@ -17,6 +17,10 @@
     box-shadow var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out);
 
+  @include reduced-motion {
+    transition-property: box-shadow, border-color;
+  }
+
   // Escuro: vidro com borda superior dourada, sem sombra.
   :global([data-tone='dark']) & {
     background-color: rgb(14 31 23 / 70%);

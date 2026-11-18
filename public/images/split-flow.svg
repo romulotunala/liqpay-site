@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" fill="none">
+  <!-- Venda (cartão) se dividindo em duas contas. Cores da paleta do site. -->
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E6CB8E"/>
+      <stop offset="0.45" stop-color="#D4AF63"/>
+      <stop offset="1" stop-color="#A9853D"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#4ADE80" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#4ADE80" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="120" cy="160" r="90" fill="url(#glow)"/>
+
+  <!-- Caminhos da divisão -->
+  <path d="M168 160 C 240 160, 250 80, 330 80" stroke="#163026" stroke-width="10" stroke-linecap="round"/>
+  <path d="M168 160 C 240 160, 250 240, 330 240" stroke="#163026" stroke-width="10" stroke-linecap="round"/>
+  <path d="M168 160 C 240 160, 250 80, 330 80" stroke="url(#gold)" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 10"/>
+  <path d="M168 160 C 240 160, 250 240, 330 240" stroke="#4ADE80" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 10"/>
+
+  <!-- Cartão (a venda) -->
+  <rect x="72" y="124" width="96" height="72" rx="12" fill="#0E1F17" stroke="url(#gold)" stroke-width="2"/>
+  <rect x="86" y="142" width="20" height="14" rx="3" fill="url(#gold)"/>
+  <rect x="86" y="172" width="52" height="6" rx="3" fill="#163026"/>
+
+  <!-- Conta 1 -->
+  <rect x="330" y="44" width="104" height="72" rx="16" fill="#0E1F17" stroke="url(#gold)" stroke-width="2"/>
+  <circle cx="358" cy="80" r="12" stroke="url(#gold)" stroke-width="2"/>
+  <rect x="380" y="70" width="38" height="6" rx="3" fill="#163026"/>
+  <rect x="380" y="84" width="26" height="6" rx="3" fill="#163026"/>
+
+  <!-- Conta 2 -->
+  <rect x="330" y="204" width="104" height="72" rx="16" fill="#0E1F17" stroke="#4ADE80" stroke-width="2"/>
+  <circle cx="358" cy="240" r="12" stroke="#4ADE80" stroke-width="2"/>
+  <rect x="380" y="230" width="38" height="6" rx="3" fill="#163026"/>
+  <rect x="380" y="244" width="26" height="6" rx="3" fill="#163026"/>
+</svg>
