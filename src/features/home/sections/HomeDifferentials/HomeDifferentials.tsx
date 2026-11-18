@@ -1,9 +1,8 @@
 import { CalendarClock, Headset, Split } from 'lucide-react';
-import { Stagger } from '@/components/motion';
 import { Card } from '@/components/ui/Card';
+import { CardGrid } from '@/components/ui/CardGrid';
 import type { IconComponent } from '@/components/ui/icons';
 import { Section } from '@/components/ui/Section';
-import styles from './HomeDifferentials.module.scss';
 
 interface Differential {
   readonly title: string;
@@ -35,15 +34,18 @@ const DIFFERENTIALS: readonly Differential[] = [
 export function HomeDifferentials() {
   return (
     <Section tone='light'>
-      <Stagger as='ul' className={styles.grid}>
+      <CardGrid>
         {DIFFERENTIALS.map((differential) => (
-          <li key={differential.title}>
-            <Card title={differential.title} icon={differential.icon} headingLevel='h2'>
-              <p>{differential.description}</p>
-            </Card>
-          </li>
+          <Card
+            key={differential.title}
+            title={differential.title}
+            icon={differential.icon}
+            headingLevel='h2'
+          >
+            <p>{differential.description}</p>
+          </Card>
         ))}
-      </Stagger>
+      </CardGrid>
     </Section>
   );
 }

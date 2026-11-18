@@ -1,9 +1,8 @@
 import { ClipboardList, FileCheck, Repeat } from 'lucide-react';
-import { Stagger } from '@/components/motion';
 import { Card } from '@/components/ui/Card';
+import { CardGrid } from '@/components/ui/CardGrid';
 import type { IconComponent } from '@/components/ui/icons';
 import { Section } from '@/components/ui/Section';
-import styles from './SplitBenefits.module.scss';
 
 interface Benefit {
   readonly title: string;
@@ -34,15 +33,18 @@ const BENEFITS: readonly Benefit[] = [
 export function SplitBenefits() {
   return (
     <Section tone='white'>
-      <Stagger as='ul' className={styles.grid}>
+      <CardGrid>
         {BENEFITS.map((benefit) => (
-          <li key={benefit.title}>
-            <Card title={benefit.title} icon={benefit.icon} headingLevel='h2'>
-              <p>{benefit.description}</p>
-            </Card>
-          </li>
+          <Card
+            key={benefit.title}
+            title={benefit.title}
+            icon={benefit.icon}
+            headingLevel='h2'
+          >
+            <p>{benefit.description}</p>
+          </Card>
         ))}
-      </Stagger>
+      </CardGrid>
     </Section>
   );
 }
