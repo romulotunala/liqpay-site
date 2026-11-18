@@ -3,3 +3,9 @@ allowBuilds:
   sharp: true
 ignoredBuiltDependencies:
   - unrs-resolver
+
+# Cadeia de suprimentos: só instala versões publicadas há pelo menos 14 dias (em minutos).
+minimumReleaseAge: 20160
+minimumReleaseAgeExclude:
+  # Já em uso no projeto desde antes da política.
+  - lucide-react
