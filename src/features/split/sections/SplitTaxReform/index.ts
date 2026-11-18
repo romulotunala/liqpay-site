@@ -1,0 +1,1 @@
+export { SplitTaxReform } from './SplitTaxReform';

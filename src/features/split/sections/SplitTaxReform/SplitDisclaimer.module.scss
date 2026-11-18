@@ -1,0 +1,17 @@
+@use '../../../../styles/abstracts/variables' as *;
+
+.disclaimer {
+  display: flex;
+  gap: $spacing-3;
+  padding: $spacing-4 $spacing-6;
+  border-inline-start: 2px solid var(--eyebrow);
+  font-size: var(--text-small);
+  line-height: $line-height-small;
+  color: var(--text-muted);
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-block-start: 1px;
+  color: var(--eyebrow);
+}
