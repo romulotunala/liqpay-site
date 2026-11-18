@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { staggerAttributes } from '@/components/motion';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@/components/ui/icons';
 import type { AnalyticsAttributes } from '@/lib/analytics/attributes';
 import { cn } from '@/lib/cn';
@@ -29,7 +30,7 @@ interface AccordionProps {
  */
 export function Accordion({ items, defaultOpenId, exclusiveGroupName, className }: AccordionProps) {
   return (
-    <div className={cn(styles.accordion, className)}>
+    <div {...staggerAttributes('fadeInUp')} className={cn(styles.accordion, className)}>
       {items.map((item) => (
         <details
           key={item.id}

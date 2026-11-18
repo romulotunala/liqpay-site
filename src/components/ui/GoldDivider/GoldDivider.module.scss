@@ -1,6 +1,22 @@
+@use '../../../styles/abstracts/mixins' as *;
+
 .divider {
   width: 100%;
   height: 1px;
   border: 0;
   background-image: var(--gradient-gold-line);
+  transition: transform var(--duration-draw) var(--ease-in-out);
+
+  // Desenhada do centro para as bordas, acompanhando o gradiente.
+  :global(.js) &:not([data-revealed]) {
+    transform: scaleX(0);
+  }
+
+  @include reduced-motion {
+    transition: none;
+
+    :global(.js) &:not([data-revealed]) {
+      transform: none;
+    }
+  }
 }

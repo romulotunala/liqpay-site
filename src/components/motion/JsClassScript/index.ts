@@ -1,0 +1,1 @@
+export { JsClassScript } from './JsClassScript';

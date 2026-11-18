@@ -172,6 +172,7 @@ $durations: (
   'fast': 150ms,
   'base': 300ms,
   'reveal': 700ms,
+  'enter': 600ms,
   'draw': 1200ms,
 );
 
@@ -181,4 +182,7 @@ $easings: (
 );
 
 $stagger: 80ms;
+
+// Entrada do Hero no carregamento: 4 passos × 100ms + 600ms = 900ms, abaixo de 1s.
+$enter-stagger: 100ms;
 $reveal-distance: 24px;

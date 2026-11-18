@@ -1,0 +1,90 @@
+// =============================================================================
+// Motion — reveal ao rolar e entrada do Hero
+// =============================================================================
+// Os atributos vêm de components/motion (revealAttributes, staggerAttributes,
+// enterAttributes). Os seletores são globais porque os atributos atravessam componentes.
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Itens além deste entram junto com o último: uma lista longa não fica esperando.
+$stagger-max-items: 8;
+$enter-steps: 4;
+
+// Estado inicial de cada efeito. `drawLine` não está aqui: cada componente desenha a sua linha.
+$reveal-start-transforms: (
+  'fadeIn': none,
+  'fadeInUp': translateY(var(--reveal-distance)),
+  'fadeInScale': scale(0.96),
+);
+
+// Só com a classe .js: sem JavaScript, nada começa escondido.
+@each $effect, $transform in $reveal-start-transforms {
+  .js [data-reveal='#{$effect}']:not([data-stagger]),
+  .js [data-reveal='#{$effect}'][data-stagger] > * {
+    opacity: 0;
+    transform: $transform;
+    transition:
+      opacity var(--duration-reveal) var(--ease-out),
+      transform var(--duration-reveal) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+}
+
+.js [data-revealed]:not([data-stagger]),
+.js [data-revealed][data-stagger] > * {
+  opacity: 1;
+  transform: none;
+}
+
+@for $index from 2 through $stagger-max-items {
+  [data-stagger] > :nth-child(#{$index}) {
+    --reveal-delay: calc(var(--stagger) * #{$index - 1});
+  }
+}
+
+[data-stagger] > :nth-child(n + #{$stagger-max-items + 1}) {
+  --reveal-delay: calc(var(--stagger) * #{$stagger-max-items - 1});
+}
+
+// Imagens com lazy loading dentro de um reveal: fadeIn quando terminam de carregar.
+.js [data-reveal] img[loading='lazy'] {
+  opacity: 0;
+  transition: opacity var(--duration-reveal) var(--ease-out);
+}
+
+.js [data-reveal] img[data-loaded] {
+  opacity: 1;
+}
+
+// Entrada do Hero: no carregamento, sem observer. Roda também sem JavaScript.
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-distance));
+  }
+}
+
+[data-enter] {
+  animation: hero-enter var(--duration-enter) var(--ease-out) both;
+}
+
+@for $step from 2 through $enter-steps {
+  [data-enter='#{$step}'] {
+    animation-delay: calc(var(--enter-stagger) * #{$step - 1});
+  }
+}
+
+// Menos movimento: sem deslocamento nem escala; o conteúdo aparece de uma vez.
+@include reduced-motion {
+  .js [data-reveal]:not([data-stagger]),
+  .js [data-reveal][data-stagger] > *,
+  .js [data-reveal] img[loading='lazy'] {
+    transform: none;
+    transition: none;
+  }
+
+  [data-enter] {
+    animation: none;
+  }
+}

@@ -1,4 +1,5 @@
 import { Children, type ReactNode } from 'react';
+import { staggerAttributes } from '@/components/motion';
 import { cn } from '@/lib/cn';
 import styles from './FeatureGrid.module.scss';
 
@@ -12,7 +13,7 @@ interface FeatureGridProps {
 /** Grade "bento": um destaque grande e cartões menores ao lado. */
 export function FeatureGrid({ featured, children, className }: FeatureGridProps) {
   return (
-    <ul className={cn(styles.grid, className)}>
+    <ul {...staggerAttributes('fadeInUp')} className={cn(styles.grid, className)}>
       <li className={styles.featured}>{featured}</li>
       {Children.map(children, (child) => (
         <li className={styles.item}>{child}</li>

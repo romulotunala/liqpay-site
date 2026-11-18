@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from 'react';
+import { Reveal } from '@/components/motion';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import type { WhatsAppContext } from '@/lib/whatsapp';
@@ -17,13 +18,13 @@ export function CtaBanner({ title, description, buttonLabel, whatsappContext }: 
 
   return (
     <Section tone='dark' labelledBy={titleId}>
-      <div className={styles.banner}>
+      <Reveal effect='fadeInScale' className={styles.banner}>
         <h2 id={titleId} className={styles.title}>{title}</h2>
         {description && <p className={styles.description}>{description}</p>}
         <Button whatsappContext={whatsappContext} analyticsLocation='cta_banner' size='lg'>
           {buttonLabel}
         </Button>
-      </div>
+      </Reveal>
     </Section>
   );
 }

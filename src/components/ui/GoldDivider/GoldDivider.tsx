@@ -1,3 +1,4 @@
+import { drawLineAttributes } from '@/components/motion';
 import { cn } from '@/lib/cn';
 import styles from './GoldDivider.module.scss';
 
@@ -7,5 +8,7 @@ interface GoldDividerProps {
 
 /** Linha dourada decorativa de 1px. Separa seções seguidas no mesmo tom. */
 export function GoldDivider({ className }: GoldDividerProps) {
-  return <hr className={cn(styles.divider, className)} aria-hidden='true' />;
+  return (
+    <hr {...drawLineAttributes} className={cn(styles.divider, className)} aria-hidden='true' />
+  );
 }

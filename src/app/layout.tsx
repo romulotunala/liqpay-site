@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Sora } from 'next/font/google';
 import { AnalyticsListener, AnalyticsScript } from '@/components/analytics';
+import { JsClassScript, RevealObserver } from '@/components/motion';
 import '../styles/globals.scss';
 
 const sora = Sora({
@@ -29,9 +30,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='pt-BR' className={`${sora.variable} ${inter.variable}`}>
+    // suppressHydrationWarning: o JsClassScript muda a classe do <html> antes da hidratação.
+    <html lang='pt-BR' className={`${sora.variable} ${inter.variable}`} suppressHydrationWarning>
+      <head>
+        <JsClassScript />
+      </head>
       <body>
         {children}
+        <RevealObserver />
         <AnalyticsListener />
         <AnalyticsScript />
       </body>

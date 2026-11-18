@@ -1,7 +1,11 @@
+@use 'sass:math';
 @use '../../../styles/abstracts/variables' as *;
 @use '../../../styles/abstracts/mixins' as *;
 
 $number-size: 48px;
+
+// O desenho da linha é calculado para os 4 passos do fluxo do split.
+$lit-steps: 4;
 
 .list {
   position: relative;
@@ -22,11 +26,33 @@ $number-size: 48px;
     left: calc($number-size / 2);
     width: 1px;
     background-color: var(--border);
+    transform-origin: top;
+    transition: transform var(--duration-draw) var(--ease-in-out);
 
     @include respond-to(lg) {
       inset: calc($number-size / 2) 0 auto;
       width: auto;
       height: 1px;
+      transform-origin: left;
+    }
+  }
+
+  // Sem JavaScript (ou já revelada), a linha aparece desenhada.
+  :global(.js) &:not([data-revealed])::before {
+    transform: scaleY(0);
+
+    @include respond-to(lg) {
+      transform: scaleX(0);
+    }
+  }
+
+  @include reduced-motion {
+    &::before {
+      transition: none;
+    }
+
+    :global(.js) &:not([data-revealed])::before {
+      transform: none;
     }
   }
 }
@@ -44,20 +70,49 @@ $number-size: 48px;
 }
 
 .number {
+  // Cor do número aceso: dourado no claro, verde-brilho no escuro (glow-400 só tem contraste
+  // sobre fundo escuro).
+  --step-lit: var(--accent);
+
   display: grid;
   grid-row: span 2;
   place-items: center;
   width: $number-size;
   height: $number-size;
-  border: 1px solid var(--border);
+  border: 1px solid var(--step-lit);
   border-radius: 50%;
   background-color: var(--surface);
   font-family: $font-heading;
   font-weight: $font-weight-semibold;
   color: var(--accent);
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+
+  :global([data-tone='dark']) & {
+    --step-lit: var(--color-glow-400);
+
+    box-shadow: 0 0 16px color-mix(in srgb, var(--color-glow-400) 25%, transparent);
+  }
 
   @include respond-to(lg) {
     grid-row: auto;
+  }
+
+  // Cada número acende quando a linha chega até ele.
+  @for $step from 2 through $lit-steps {
+    .step:nth-child(#{$step}) & {
+      transition-delay: calc(var(--duration-draw) * #{math.div($step - 1, $lit-steps - 1)});
+    }
+  }
+
+  :global(.js) .list:not([data-revealed]) & {
+    border-color: var(--border);
+    box-shadow: none;
+  }
+
+  @include reduced-motion {
+    transition: none;
   }
 }
 

@@ -59,6 +59,7 @@
   }
 
   --stagger: #{$stagger};
+  --enter-stagger: #{$enter-stagger};
   --reveal-distance: #{$reveal-distance};
 
   @include theme($default-theme);

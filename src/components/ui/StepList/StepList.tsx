@@ -1,3 +1,4 @@
+import { drawLineAttributes } from '@/components/motion';
 import { cn } from '@/lib/cn';
 import styles from './StepList.module.scss';
 
@@ -13,10 +14,13 @@ interface StepListProps {
 
 const STEP_NUMBER_DIGITS = 2;
 
-/** Passos numerados (01, 02…) ligados por uma linha: horizontal no desktop, vertical no mobile. */
+/**
+ * Passos numerados (01, 02…) ligados por uma linha: horizontal no desktop, vertical no mobile.
+ * Ao entrar na tela, a linha é desenhada e os números acendem em sequência.
+ */
 export function StepList({ steps, className }: StepListProps) {
   return (
-    <ol className={cn(styles.list, className)}>
+    <ol {...drawLineAttributes} className={cn(styles.list, className)}>
       {steps.map((step, index) => (
         <li key={step.title} className={styles.step}>
           {/* O <ol> já anuncia a posição; o número visível é decorativo. */}
