@@ -1,0 +1,34 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+.header {
+  margin-block-end: $spacing-12;
+}
+
+.values {
+  display: grid;
+  gap: $spacing-8 $grid-gap;
+
+  @include respond-to(md) {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: $spacing-16;
+  }
+}
+
+.value {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-4;
+  padding-block-end: $spacing-8;
+  border-bottom: 1px solid var(--border);
+}
+
+.text {
+  font-size: var(--text-lead);
+  line-height: $line-height-lead;
+  color: var(--text-muted);
+}
+
+.name {
+  color: var(--text);
+}

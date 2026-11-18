@@ -1,0 +1,1 @@
+export { AboutPartner } from './AboutPartner';
