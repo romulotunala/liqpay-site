@@ -51,6 +51,32 @@ test('o menu mobile abre, navega e fecha sozinho na página nova', async ({ page
   await expect(menu).toBeHidden();
 });
 
+test('se o JavaScript do site não carregar, o conteúdo aparece mesmo assim', async ({ page }) => {
+  // Simula os arquivos JS de um deploy anterior, já removidos do servidor.
+  await page.route(
+    (url) => url.pathname.includes('/_next/static/') && url.pathname.endsWith('.js'),
+    (route) => route.fulfill({ status: 404, body: '' }),
+  );
+  await page.goto('./');
+
+  // Vencido o prazo do script inline, a página volta ao modo sem JS.
+  await expect(page.locator('html')).not.toHaveClass(/\bjs\b/, { timeout: 10_000 });
+  for (const block of await page.locator('[data-reveal]').all()) {
+    await expect(block).toHaveCSS('opacity', '1');
+  }
+  await expect(page.getByRole('banner')).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+});
+
+test('com o JavaScript funcionando, as animações continuam depois do prazo', async ({ page }) => {
+  await page.goto('./');
+  await expect(page.locator('html')).toHaveAttribute('data-motion-ready', '');
+
+  // Depois do prazo do script inline (4s), a classe js tem de continuar lá.
+  await page.waitForTimeout(5000);
+
+  await expect(page.locator('html')).toHaveClass(/\bjs\b/);
+});
+
 test.describe('detector de termos proibidos', () => {
   test('encontra marcas com acento, percentuais e promessas', () => {
     expect(findForbiddenTerms('Pagamentos pelo Itaú.')).toEqual(['itaú']);

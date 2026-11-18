@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
+import { markMotionReady } from '../hydration';
 
 const PENDING_REVEAL_SELECTOR = '[data-reveal]:not([data-revealed])';
 const REVEAL_IMAGE_SELECTOR = '[data-reveal] img';
@@ -70,6 +71,8 @@ function watchImageLoads() {
 export function RevealObserver() {
   const pathname = usePathname();
 
+  // Avisa o script inline que o JavaScript do site carregou (ver JsClassScript).
+  useEffect(markMotionReady, []);
   useEffect(() => observeReveals(), [pathname]);
   useEffect(() => watchImageLoads(), [pathname]);
 
