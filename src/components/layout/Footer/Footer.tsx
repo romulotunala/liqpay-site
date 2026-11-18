@@ -70,7 +70,7 @@ export function Footer() {
                   analytics={whatsappClickAttributes('general', 'footer')}
                   opensInNewTab
                 >
-                  WhatsApp {contact.whatsapp.display}
+                  WhatsApp <span className={styles.phone}>{contact.whatsapp.display}</span>
                 </ContactLink>
               </li>
               <li>

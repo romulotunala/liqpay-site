@@ -83,10 +83,15 @@ $image-max-width: 560px;
   position: relative;
   width: min(90%, 400px);
 
-  // Maior que a coluna, como pede a composição: avança sobre o espaço entre as colunas.
   @include respond-to(lg) {
-    width: 125%;
+    width: 100%;
     max-width: $image-max-width;
+  }
+
+  // Maior que a coluna, como pede a composição. Só a partir de xl: em 1024px a sobra passaria
+  // da borda da tela e cortaria a imagem.
+  @include respond-to(xl) {
+    width: 125%;
   }
 
   // Sombra esverdeada no "chão", para dar profundidade.

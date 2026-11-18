@@ -90,6 +90,11 @@
   }
 }
 
+.phone {
+  // O hífen do número seria um ponto de quebra: "(31) 9 7249-" numa linha e "9256" na outra.
+  white-space: nowrap;
+}
+
 .legal {
   display: flex;
   flex-direction: column;
