@@ -10,6 +10,7 @@ import {
 } from '@/components/layout';
 import { JsClassScript, RevealObserver } from '@/components/motion';
 import { JsonLd } from '@/components/seo';
+import { siteConfig } from '@/config/site';
 import { organizationJsonLd } from '@/lib/seo';
 import '../styles/globals.scss';
 
@@ -27,10 +28,11 @@ const inter = Inter({
   display: 'swap',
 });
 
+// Só os padrões do site: título, descrição, canonical e Open Graph vêm de cada página
+// (buildMetadata), para nenhuma rota herdar os da página inicial por engano.
 export const metadata: Metadata = {
-  title: 'LiqPay – Maquininha, PIX e split de pagamentos',
-  description: 'Receba suas vendas com segurança, dinheiro na conta no dia seguinte e atendimento '
-    + 'humano 24h. Maquininha, PIX, link de pagamento, boleto e split.',
+  title: siteConfig.name,
+  applicationName: siteConfig.name,
 };
 
 export default function RootLayout({

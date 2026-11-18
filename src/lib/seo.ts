@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, MetadataRoute } from 'next';
 import { siteConfig } from '@/config/site';
 import type { InternalHref } from '@/types/navigation';
 import { absoluteUrl, type PathHelpers } from './paths';
@@ -42,6 +42,8 @@ export function createMetadataBuilder({ absoluteUrl }: Pick<PathHelpers, 'absolu
           },
         ],
       },
+      // Sem isto, o X usa as tags Open Graph, mas com a prévia pequena.
+      twitter: { card: 'summary_large_image' },
     };
   };
 }
@@ -82,4 +84,22 @@ export function buildFaqPageJsonLd(entries: readonly FaqJsonLdEntry[]) {
       acceptedAnswer: { '@type': 'Answer', text: answer },
     })),
   } as const;
+}
+
+type AbsoluteUrlHelper = Pick<PathHelpers, 'absoluteUrl'>;
+
+// Só a URL: o Google ignora changeFrequency e priority, e uma data de build mudaria a cada
+// deploy sem refletir mudança de conteúdo.
+export function createSitemap(
+  { absoluteUrl }: AbsoluteUrlHelper,
+  paths: readonly InternalHref[],
+): MetadataRoute.Sitemap {
+  return paths.map((path) => ({ url: absoluteUrl(path) }));
+}
+
+export function createRobots({ absoluteUrl }: AbsoluteUrlHelper): MetadataRoute.Robots {
+  return {
+    rules: { userAgent: '*', allow: '/' },
+    sitemap: absoluteUrl('/sitemap.xml'),
+  };
 }

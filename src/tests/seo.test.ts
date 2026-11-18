@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { createPathHelpers } from '@/lib/paths';
-import { buildFaqPageJsonLd, createMetadataBuilder, createOrganizationJsonLd } from '@/lib/seo';
+import {
+  buildFaqPageJsonLd,
+  createMetadataBuilder,
+  createOrganizationJsonLd,
+  createRobots,
+  createSitemap,
+} from '@/lib/seo';
 
 const pathHelpers = createPathHelpers({
   siteUrl: 'https://exemplo.github.io/liqpay-site',
@@ -64,5 +70,29 @@ describe('buildFaqPageJsonLd', () => {
         acceptedAnswer: { '@type': 'Answer', text: 'Resposta.' },
       },
     ]);
+  });
+});
+
+describe('createSitemap', () => {
+  it('lista cada rota com URL absoluta e o basePath', () => {
+    expect(createSitemap(pathHelpers, ['/', '/solucoes'])).toEqual([
+      { url: 'https://exemplo.github.io/liqpay-site/' },
+      { url: 'https://exemplo.github.io/liqpay-site/solucoes' },
+    ]);
+  });
+});
+
+describe('createRobots', () => {
+  it('libera todas as páginas e aponta para o sitemap com o basePath', () => {
+    expect(createRobots(pathHelpers)).toEqual({
+      rules: { userAgent: '*', allow: '/' },
+      sitemap: 'https://exemplo.github.io/liqpay-site/sitemap.xml',
+    });
+  });
+});
+
+describe('buildMetadata no X', () => {
+  it('pede a prévia grande', () => {
+    expect(metadata.twitter).toMatchObject({ card: 'summary_large_image' });
   });
 });

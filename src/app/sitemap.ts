@@ -1,17 +1,11 @@
 import type { MetadataRoute } from 'next';
+import { siteConfig } from '@/config/site';
+import { absoluteUrl } from '@/lib/paths';
+import { createSitemap } from '@/lib/seo';
 
 export const dynamic = 'force-static';
 
+// O menu lista todas as páginas do site: uma página nova entra no menu e no sitemap juntas.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ?? 'https://exemplo.github.io/nextforge';
-
-  return [
-    {
-      url: siteUrl,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-  ];
+  return createSitemap({ absoluteUrl }, siteConfig.navigation.map((item) => item.href));
 }
