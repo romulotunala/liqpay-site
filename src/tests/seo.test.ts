@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createPathHelpers } from '@/lib/paths';
-import { createMetadataBuilder, createOrganizationJsonLd } from '@/lib/seo';
+import { buildFaqPageJsonLd, createMetadataBuilder, createOrganizationJsonLd } from '@/lib/seo';
 
 const pathHelpers = createPathHelpers({
   siteUrl: 'https://exemplo.github.io/liqpay-site',
@@ -49,5 +49,20 @@ describe('createOrganizationJsonLd', () => {
 
   it('liga a organização ao perfil do Instagram', () => {
     expect(organization.sameAs).toEqual(['https://www.instagram.com/liqpaybank']);
+  });
+});
+
+describe('buildFaqPageJsonLd', () => {
+  it('gera uma Question com Answer para cada pergunta', () => {
+    const faqPage = buildFaqPageJsonLd([{ question: 'Pergunta?', answer: 'Resposta.' }]);
+
+    expect(faqPage['@type']).toBe('FAQPage');
+    expect(faqPage.mainEntity).toEqual([
+      {
+        '@type': 'Question',
+        name: 'Pergunta?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Resposta.' },
+      },
+    ]);
   });
 });

@@ -65,3 +65,21 @@ export function createOrganizationJsonLd({ absoluteUrl }: Pick<PathHelpers, 'abs
 }
 
 export const organizationJsonLd = createOrganizationJsonLd({ absoluteUrl });
+
+export interface FaqJsonLdEntry {
+  readonly question: string;
+  /** Texto puro, sem marcação: é o que os buscadores exibem. */
+  readonly answer: string;
+}
+
+export function buildFaqPageJsonLd(entries: readonly FaqJsonLdEntry[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: entries.map(({ question, answer }) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  } as const;
+}

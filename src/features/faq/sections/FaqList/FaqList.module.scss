@@ -1,0 +1,23 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+// Linhas longas cansam numa lista de perguntas: largura de leitura, alinhada à esquerda.
+.accordion {
+  max-inline-size: 52rem;
+}
+
+.link {
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  font-weight: $font-weight-semibold;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
