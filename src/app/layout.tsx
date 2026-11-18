@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Sora } from 'next/font/google';
+import localFont from 'next/font/local';
 import { AnalyticsListener, AnalyticsScript } from '@/components/analytics';
 import {
   Footer,
@@ -14,17 +14,19 @@ import { siteConfig } from '@/config/site';
 import { organizationJsonLd } from '@/lib/seo';
 import '../styles/globals.scss';
 
-const sora = Sora({
+// Fontes no próprio projeto (fonts/, com as licenças OFL): o build não depende de baixá-las do
+// Google. Arquivos variáveis com o subconjunto latino, só com os pesos usados.
+const sora = localFont({
+  src: './fonts/sora-latin.woff2',
   variable: '--font-sora',
-  subsets: ['latin'],
-  weight: ['600', '700'],
+  weight: '600 700',
   display: 'swap',
 });
 
-const inter = Inter({
+const inter = localFont({
+  src: './fonts/inter-latin.woff2',
   variable: '--font-inter',
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: '400 600',
   display: 'swap',
 });
 
