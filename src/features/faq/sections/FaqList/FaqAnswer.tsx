@@ -1,6 +1,5 @@
 import { NewTabNotice } from '@/components/ui/NewTabNotice';
-import { whatsappClickAttributes } from '@/lib/analytics/attributes';
-import { buildWhatsAppUrl } from '@/lib/whatsapp';
+import { whatsappLinkProps } from '@/lib/links';
 import type { FaqAnswerPart } from './faqItems';
 import styles from './FaqList.module.scss';
 
@@ -19,10 +18,7 @@ export function FaqAnswer({ answer }: FaqAnswerProps) {
         return (
           <a
             key={part.whatsappLink}
-            {...whatsappClickAttributes('general', 'faq')}
-            href={buildWhatsAppUrl('general')}
-            target='_blank'
-            rel='noopener noreferrer'
+            {...whatsappLinkProps('general', 'faq')}
             className={styles.link}
           >
             {part.whatsappLink}

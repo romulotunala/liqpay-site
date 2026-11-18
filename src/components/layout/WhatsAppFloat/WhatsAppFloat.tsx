@@ -1,7 +1,6 @@
 import { WhatsAppIcon } from '@/components/ui/icons';
 import { NewTabNotice } from '@/components/ui/NewTabNotice';
-import { whatsappClickAttributes } from '@/lib/analytics/attributes';
-import { buildWhatsAppUrl } from '@/lib/whatsapp';
+import { whatsappLinkProps } from '@/lib/links';
 import { WhatsAppFloatFrame } from './WhatsAppFloatFrame';
 import styles from './WhatsAppFloat.module.scss';
 
@@ -11,13 +10,7 @@ const FLOAT_ICON_SIZE = 28;
 export function WhatsAppFloat() {
   return (
     <WhatsAppFloatFrame className={styles.frame}>
-      <a
-        {...whatsappClickAttributes('general', 'float')}
-        href={buildWhatsAppUrl('general')}
-        target='_blank'
-        rel='noopener noreferrer'
-        className={styles.button}
-      >
+      <a {...whatsappLinkProps('general', 'float')} className={styles.button}>
         <WhatsAppIcon size={FLOAT_ICON_SIZE} />
         <span className={styles.visuallyHidden}>Fale conosco no WhatsApp</span>
         <NewTabNotice />

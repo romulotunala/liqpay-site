@@ -83,7 +83,7 @@
 
   &:hover {
     background-color: var(--color-gold-300);
-    box-shadow: 0 8px 24px rgb(212 175 99 / 30%);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-gold-400) 30%, transparent);
     transform: translateY(-1px);
   }
 
@@ -100,7 +100,7 @@
   color: var(--color-white);
 
   &:hover {
-    background-color: color-mix(in srgb, var(--color-emerald-700), black 8%);
+    background-color: var(--color-emerald-700-hover);
   }
 
   :global([data-tone='dark']) & {
@@ -109,7 +109,7 @@
     color: var(--color-gold-400);
 
     &:hover {
-      background-color: rgb(212 175 99 / 10%);
+      background-color: color-mix(in srgb, var(--color-gold-400) 10%, transparent);
     }
   }
 }

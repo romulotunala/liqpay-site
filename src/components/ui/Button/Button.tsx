@@ -4,9 +4,9 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'reac
 import { ICON_SIZE, ICON_STROKE_WIDTH, WhatsAppIcon } from '@/components/ui/icons';
 import { NewTabNotice } from '@/components/ui/NewTabNotice';
 import type { AnalyticsLocation } from '@/lib/analytics';
-import { whatsappClickAttributes } from '@/lib/analytics/attributes';
 import { cn } from '@/lib/cn';
-import { buildWhatsAppUrl, type WhatsAppContext } from '@/lib/whatsapp';
+import { whatsappLinkProps } from '@/lib/links';
+import type { WhatsAppContext } from '@/lib/whatsapp';
 import type { InternalHref } from '@/types/navigation';
 import styles from './Button.module.scss';
 
@@ -106,10 +106,7 @@ function WhatsAppButton({
   return (
     <a
       {...anchorProps}
-      {...whatsappClickAttributes(whatsappContext, analyticsLocation)}
-      href={buildWhatsAppUrl(whatsappContext)}
-      target='_blank'
-      rel='noopener noreferrer'
+      {...whatsappLinkProps(whatsappContext, analyticsLocation)}
       className={buttonClassName({ variant, size, className, children })}
     >
       <ButtonContent icon={icon}>{children}</ButtonContent>

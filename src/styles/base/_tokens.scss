@@ -30,6 +30,10 @@
     --color-#{$name}: #{$value};
   }
 
+  // Hover dos fundos verdes (botão secundário, botão flutuante): o emerald escurecido com o
+  // tom mais escuro da própria paleta.
+  --color-emerald-700-hover: color-mix(in srgb, var(--color-emerald-700) 92%, var(--color-ink-950));
+
   @each $name, $value in $gradients {
     --gradient-#{$name}: #{$value};
   }

@@ -36,11 +36,11 @@ $button-size: 56px;
   border-radius: var(--radius-full);
   background-color: var(--color-emerald-700);
   color: var(--color-white);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-card-hover);
   transition: background-color var(--duration-fast) var(--ease-out);
 
   &:hover {
-    background-color: color-mix(in srgb, var(--color-emerald-700), black 8%);
+    background-color: var(--color-emerald-700-hover);
   }
 
   &:focus-visible {

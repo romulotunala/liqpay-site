@@ -4,10 +4,8 @@ import { CardGrid } from '@/components/ui/CardGrid';
 import { InstagramIcon, WhatsAppIcon } from '@/components/ui/icons';
 import { Section } from '@/components/ui/Section';
 import { siteConfig } from '@/config/site';
-import { linkClickAttributes, whatsappClickAttributes } from '@/lib/analytics/attributes';
-import { buildWhatsAppUrl } from '@/lib/whatsapp';
-
-const NEW_TAB = { target: '_blank', rel: 'noopener noreferrer' } as const;
+import { linkClickAttributes } from '@/lib/analytics/attributes';
+import { NEW_TAB_LINK_PROPS, whatsappLinkProps } from '@/lib/links';
 
 /** Sem título de seção: os cartões usam h2 para a hierarquia não pular níveis. */
 export function ContactChannels() {
@@ -20,11 +18,7 @@ export function ContactChannels() {
           title='WhatsApp da Central'
           icon={WhatsAppIcon}
           headingLevel='h2'
-          link={{
-            href: buildWhatsAppUrl('general'),
-            ...NEW_TAB,
-            ...whatsappClickAttributes('general', 'contact_card'),
-          }}
+          link={whatsappLinkProps('general', 'contact_card')}
         >
           <p>{whatsapp.display}</p>
         </Card>
@@ -42,7 +36,7 @@ export function ContactChannels() {
           headingLevel='h2'
           link={{
             href: instagram.url,
-            ...NEW_TAB,
+            ...NEW_TAB_LINK_PROPS,
             ...linkClickAttributes('instagram_click', 'contact_card'),
           }}
         >

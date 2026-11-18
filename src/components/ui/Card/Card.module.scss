@@ -23,7 +23,7 @@
 
   // Escuro: vidro com borda superior dourada, sem sombra.
   :global([data-tone='dark']) & {
-    background-color: rgb(14 31 23 / 70%);
+    background-color: color-mix(in srgb, var(--color-ink-900) 70%, transparent);
     box-shadow: none;
     backdrop-filter: blur(12px);
 

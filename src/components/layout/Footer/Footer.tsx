@@ -1,36 +1,32 @@
 import { Mail } from 'lucide-react';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import type { AnchorHTMLAttributes, ReactNode } from 'react';
 import { Logo } from '@/components/layout/Logo';
 import { ICON_STROKE_WIDTH, InstagramIcon, WhatsAppIcon } from '@/components/ui/icons';
 import { NewTabNotice } from '@/components/ui/NewTabNotice';
 import { siteConfig } from '@/config/site';
-import {
-  linkClickAttributes,
-  whatsappClickAttributes,
-  type AnalyticsAttributes,
-} from '@/lib/analytics/attributes';
-import { buildWhatsAppUrl } from '@/lib/whatsapp';
+import { linkClickAttributes, type AnalyticsAttributes } from '@/lib/analytics/attributes';
+import { NEW_TAB_LINK_PROPS, whatsappLinkProps } from '@/lib/links';
 import styles from './Footer.module.scss';
 
 const CONTACT_ICON_SIZE = 20;
 
+type ContactAnchorProps = Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'target' | 'rel'>
+  & AnalyticsAttributes
+  & { readonly href: string };
+
 interface ContactLinkProps {
-  readonly href: string;
+  readonly link: ContactAnchorProps;
   readonly icon: ReactNode;
-  readonly analytics: AnalyticsAttributes;
-  readonly opensInNewTab?: boolean;
   readonly children: ReactNode;
 }
 
-function ContactLink({ href, icon, analytics, opensInNewTab, children }: ContactLinkProps) {
-  const newTabProps = opensInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {};
-
+function ContactLink({ link, icon, children }: ContactLinkProps) {
   return (
-    <a {...analytics} {...newTabProps} href={href} className={styles.contactLink}>
+    <a {...link} className={styles.contactLink}>
       {icon}
       <span>{children}</span>
-      {opensInNewTab && <NewTabNotice />}
+      {link.target === '_blank' && <NewTabNotice />}
     </a>
   );
 }
@@ -65,17 +61,18 @@ export function Footer() {
             <ul className={styles.list}>
               <li>
                 <ContactLink
-                  href={buildWhatsAppUrl('general')}
+                  link={whatsappLinkProps('general', 'footer')}
                   icon={<WhatsAppIcon size={CONTACT_ICON_SIZE} />}
-                  analytics={whatsappClickAttributes('general', 'footer')}
-                  opensInNewTab
                 >
                   WhatsApp <span className={styles.phone}>{contact.whatsapp.display}</span>
                 </ContactLink>
               </li>
               <li>
                 <ContactLink
-                  href={`mailto:${contact.email}`}
+                  link={{
+                    href: `mailto:${contact.email}`,
+                    ...linkClickAttributes('email_click', 'footer'),
+                  }}
                   icon={(
                     <Mail
                       size={CONTACT_ICON_SIZE}
@@ -83,17 +80,18 @@ export function Footer() {
                       aria-hidden='true'
                     />
                   )}
-                  analytics={linkClickAttributes('email_click', 'footer')}
                 >
                   {contact.email}
                 </ContactLink>
               </li>
               <li>
                 <ContactLink
-                  href={contact.instagram.url}
+                  link={{
+                    href: contact.instagram.url,
+                    ...NEW_TAB_LINK_PROPS,
+                    ...linkClickAttributes('instagram_click', 'footer'),
+                  }}
                   icon={<InstagramIcon size={CONTACT_ICON_SIZE} />}
-                  analytics={linkClickAttributes('instagram_click', 'footer')}
-                  opensInNewTab
                 >
                   Instagram {contact.instagram.handle}
                 </ContactLink>
