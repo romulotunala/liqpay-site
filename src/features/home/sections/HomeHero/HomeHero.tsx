@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import { useId } from 'react';
-import { enterAttributes } from '@/components/motion';
+import { enterAttributes, PointerTilt } from '@/components/motion';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { withBasePath } from '@/lib/paths';
 import styles from './HomeHero.module.scss';
 
-// Provisório, para aprovação do cliente: o símbolo com a maquininha, exibido maior que o original.
-// A versão definitiva entra pelo script de imagens (1x e @2x) trocando só src e dimensões.
-const HERO_IMAGE = { src: '/images/logo-symbol-large.webp', width: 331, height: 302 } as const;
+// Arquivo @2x exibido em 1x. A máscara do reflexo, recortada junto, fica em src/assets/
+// (ver HERO_POS_LAYERS em scripts/generate-images.ts).
+const HERO_IMAGE = { src: '/images/pos-terminal-hero.webp', width: 260, height: 603 } as const;
 
 export function HomeHero() {
   const titleId = useId();
@@ -36,16 +36,21 @@ export function HomeHero() {
         </div>
 
         <div className={styles.visual} {...enterAttributes(4)}>
-          <div className={styles.device}>
-            <Image
-              src={withBasePath(HERO_IMAGE.src)}
-              width={HERO_IMAGE.width}
-              height={HERO_IMAGE.height}
-              alt='Maquininha LiqPay diante do símbolo da marca'
-              preload
-              className={styles.image}
-            />
-          </div>
+          <PointerTilt className={styles.device}>
+            <div className={styles.tilt}>
+              <Image
+                src={withBasePath(HERO_IMAGE.src)}
+                width={HERO_IMAGE.width}
+                height={HERO_IMAGE.height}
+                alt='Maquininha de cartão LiqPay com impressora'
+                preload
+                className={styles.image}
+              />
+              <span className={styles.glare} aria-hidden='true'>
+                <span className={styles.glareBeam} />
+              </span>
+            </div>
+          </PointerTilt>
         </div>
       </div>
     </Section>

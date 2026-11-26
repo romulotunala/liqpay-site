@@ -1,13 +1,18 @@
+import Image from 'next/image';
 import { useId } from 'react';
 import { Reveal, Stagger } from '@/components/motion';
 import { Button } from '@/components/ui/Button';
-import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { Section } from '@/components/ui/Section';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { withBasePath } from '@/lib/paths';
 import styles from './SolutionsPos.module.scss';
 
-// Dimensões finais do mockup da maquininha (pendente).
-const POS_MOCKUP = { width: 480, height: 560 } as const;
+// Arquivo @2x exibido em 1x (ver scripts/generate-images.ts).
+const POS_IMAGE = {
+  src: '/images/pos-terminal-angled.webp',
+  width: 280,
+  height: 606,
+} as const;
 
 const POS_FEATURES = [
   'Aceita cartões de débito e crédito, à vista ou parcelado',
@@ -25,7 +30,15 @@ export function SolutionsPos() {
     <Section tone='light' labelledBy={titleId}>
       <div className={styles.layout}>
         <Reveal effect='fadeInScale' className={styles.visual}>
-          <ImagePlaceholder width={POS_MOCKUP.width} height={POS_MOCKUP.height} />
+          <Image
+            src={withBasePath(POS_IMAGE.src)}
+            width={POS_IMAGE.width}
+            height={POS_IMAGE.height}
+            alt='Maquininha LiqPay com tela touch e impressora de comprovante'
+            loading='lazy'
+            decoding='async'
+            className={styles.image}
+          />
         </Reveal>
 
         <div className={styles.content}>

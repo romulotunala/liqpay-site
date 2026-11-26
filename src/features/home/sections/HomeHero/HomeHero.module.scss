@@ -4,9 +4,21 @@
 // Quanto a imagem avança sobre a seção seguinte (só no mobile).
 $overlap-mobile: 2rem;
 
-// Maior que o original (331px) de propósito: é provisória, para aprovação do cliente, e perde
-// nitidez. A definitiva deve ter ao menos o dobro de $image-max-width para telas retina.
-$image-max-width: 560px;
+// Em coluna única, a maquininha inteira (603px) empurraria a próxima seção para longe.
+$device-max-height-stacked: 440px;
+
+// Ao lado do texto, ela precisa caber na primeira tela também em notebooks baixos (1366×768),
+// onde o próprio Hero é mais alto que a tela e a imagem fica centralizada na altura dele.
+$device-max-height-viewport: 65svh;
+
+// Inclinação máxima com o mouse nas bordas da tela. Discreta de propósito.
+$tilt-max-y: 8deg;
+$tilt-max-x: 5deg;
+$tilt-perspective: 1200px;
+$floor-shift: 12px;
+
+// O reflexo entra depois da imagem, que é o último passo da entrada (3 × 100ms + 600ms).
+$glare-delay: calc(var(--enter-stagger) * 3 + var(--duration-enter));
 
 // z-index: a maquininha invade a seção seguinte e precisa ficar por cima dela.
 // overflow-x: clip corta qualquer sobra lateral sem cortar o avanço para baixo.
@@ -81,26 +93,15 @@ $image-max-width: 560px;
 
 .device {
   position: relative;
-  width: min(90%, 400px);
+  perspective: $tilt-perspective;
 
-  @include respond-to(lg) {
-    width: 100%;
-    max-width: $image-max-width;
-  }
-
-  // Maior que a coluna, como pede a composição. Só a partir de xl: em 1024px a sobra passaria
-  // da borda da tela e cortaria a imagem.
-  @include respond-to(xl) {
-    width: 125%;
-  }
-
-  // Sombra esverdeada no "chão", para dar profundidade.
+  // Sombra esverdeada no "chão", para dar profundidade. Desliza no sentido oposto à inclinação.
   &::after {
     content: '';
     position: absolute;
-    inset: auto 10% -6%;
+    inset: auto 10% -4%;
     z-index: -1;
-    height: 12%;
+    height: 8%;
     border-radius: 50%;
     background: radial-gradient(
       closest-side,
@@ -108,10 +109,64 @@ $image-max-width: 560px;
       transparent
     );
     filter: blur(12px);
+    translate: calc(var(--tilt-x, 0) * #{-$floor-shift}) 0;
+  }
+}
+
+// --tilt-x e --tilt-y vêm do PointerTilt; sem elas (toque, movimento reduzido, sem JS), 0.
+.tilt {
+  position: relative;
+  transform:
+    rotateY(calc(var(--tilt-x, 0) * #{$tilt-max-y}))
+    rotateX(calc(var(--tilt-y, 0) * #{-$tilt-max-x}));
+
+  @media (hover: hover) and (pointer: fine) {
+    will-change: transform;
   }
 }
 
 .image {
-  width: 100%;
-  height: auto;
+  inline-size: auto;
+  max-block-size: $device-max-height-stacked;
+
+  @include respond-to(lg) {
+    max-block-size: $device-max-height-viewport;
+  }
+}
+
+// Reflexo de luz recortado pelo vidro da tela. A máscara foi recortada junto com a imagem, por
+// isso ocupa exatamente a mesma área.
+.glare {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  mask-image: url('../../../../assets/pos-screen-mask.webp');
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+}
+
+@keyframes glare-sweep {
+  from {
+    translate: -100% 0;
+  }
+}
+
+// Faixa diagonal: entra uma vez varrendo o vidro e para no centro; com o mouse, desliza junto
+// com a inclinação.
+.glareBeam {
+  position: absolute;
+  inset: 0 -50%;
+  background-image: linear-gradient(
+    115deg,
+    transparent 40%,
+    color-mix(in srgb, var(--color-white) 30%, transparent) 50%,
+    transparent 60%
+  );
+  transform: translateX(calc(var(--tilt-x, 0) * 20%));
+  animation: glare-sweep var(--duration-draw) var(--ease-in-out) $glare-delay both;
+
+  @include reduced-motion {
+    animation: none;
+  }
 }

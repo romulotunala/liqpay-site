@@ -7,3 +7,9 @@
 .more {
   margin-block-start: $spacing-10;
 }
+
+// Abaixo de 560px de largura, a altura acompanha (o atributo height fixaria a altura).
+.posImage {
+  block-size: auto;
+  margin-inline: auto;
+}

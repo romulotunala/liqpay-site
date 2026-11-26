@@ -41,7 +41,7 @@ export function Footer() {
       <div className={styles.container}>
         <div className={styles.columns}>
           <div className={styles.brand}>
-            <Logo />
+            <Logo variant='full' />
             <p className={styles.tagline}>{siteConfig.tagline}</p>
           </div>
 

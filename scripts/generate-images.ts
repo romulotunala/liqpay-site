@@ -8,6 +8,7 @@ import sharp, { type Color, type Sharp } from 'sharp';
 const SOURCE_DIR = 'docs/imagens';
 const IMAGES_DIR = 'public/images';
 const APP_DIR = 'src/app';
+const ASSETS_DIR = 'src/assets';
 
 const INK_950 = '#07110D';
 const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 };
@@ -36,8 +37,11 @@ const WORDMARK_LETTERS_CUT_ROW = 154;
 // Alfa até ~3%: resto invisível de suavização das bordas, aceito na linha do corte.
 const INVISIBLE_ALPHA = 8;
 
+// Logomarca completa (símbolo, nome e slogan): rodapé, JSON-LD e imagem Open Graph.
+const FULL_LOGO_SOURCE = 'LiqPay_logo_4096px.png';
+
 const LOGO_VARIANTS: readonly LogoVariant[] = [
-  { source: 'Logo_LiqPay_sem_fundo.png', name: 'logo-full', height: 160 },
+  { source: FULL_LOGO_SOURCE, name: 'logo-full', height: 160 },
   { source: 'LiqPay_nome.png', name: 'logo-wordmark', height: 40 },
   // Sem o slogan: em 32–40px de altura ele fica ilegível. Para o header e o rodapé.
   {
@@ -51,13 +55,41 @@ const LOGO_VARIANTS: readonly LogoVariant[] = [
 
 const SYMBOL_SOURCE = 'LiqPay_simbolo.png';
 
-// Imagens geradas no tamanho do original, sem @2x: o original não tem resolução para isso.
-// Exibidas menores que o arquivo, ficam nítidas em telas 1x e aceitáveis em 2x.
-const NATIVE_IMAGES = [
-  // Símbolo com a maquininha: cartão "Maquininha LiqPay", até o mockup chegar.
-  { source: SYMBOL_SOURCE, name: 'logo-symbol-large' },
-] as const;
-const FULL_LOGO_SOURCE = 'Logo_LiqPay_sem_fundo.png';
+interface ProductImage {
+  readonly source: string;
+  readonly name: string;
+  /** Largura máxima de exibição em CSS px. O arquivo sai no dobro e é exibido em 1x. */
+  readonly displayWidth: number;
+}
+
+// Um arquivo @2x só, como a logo do header: nítido em telas retina, sem srcset.
+const PRODUCT_IMAGE_SCALE = 2;
+
+const PRODUCT_IMAGES: readonly ProductImage[] = [
+  // Deitada: tem a proporção do cartão de destaque "Maquininha LiqPay" da Home.
+  { source: 'maquininha_deitada_alta_resolucao.png', name: 'pos-terminal', displayWidth: 560 },
+  // Em pé e em 3/4: cabe na coluna estreita da seção da maquininha em Soluções.
+  {
+    source: 'maquininha_liqpay_3-4_alta_resolucao.png',
+    name: 'pos-terminal-angled',
+    displayWidth: 280,
+  },
+];
+
+// Camadas do Hero: os originais têm o mesmo canvas e já vêm alinhados. As duas são recortadas
+// pela mesma área (a da maquininha) para continuarem alinhadas. A máscara é usada só pelo CSS
+// (mask-image), por isso vai para src/assets/.
+const HERO_POS_LAYERS = {
+  displayWidth: 260,
+  device: {
+    source: 'maquininha_alta_resolucao.png',
+    output: join(IMAGES_DIR, 'pos-terminal-hero.webp'),
+  },
+  screenMask: {
+    source: 'mascara_tela_alta_resolucao.png',
+    output: join(ASSETS_DIR, 'pos-screen-mask.webp'),
+  },
+} as const;
 
 const ICON_SIZE = 512;
 const APPLE_ICON_SIZE = 180;
@@ -121,12 +153,16 @@ async function cropTopRows(path: string, rows: number, width: number): Promise<B
   return sharp(path).extract({ left: 0, top: 0, width, height: rows }).png().toBuffer();
 }
 
-async function loadTrimmed(source: string, keepTopRows?: number): Promise<TrimmedImage> {
+function sourcePath(source: string): string {
   const path = join(SOURCE_DIR, source);
   if (!existsSync(path)) {
     throw new Error(`Original não encontrado: ${path}. Os originais ficam só na máquina local.`);
   }
+  return path;
+}
 
+async function loadTrimmed(source: string, keepTopRows?: number): Promise<TrimmedImage> {
+  const path = sourcePath(source);
   const alpha = await readAlpha(path);
   assertTransparentCorners(path, alpha);
 
@@ -145,10 +181,10 @@ async function loadTrimmed(source: string, keepTopRows?: number): Promise<Trimme
   return { buffer: data, width: info.width, height: info.height };
 }
 
-function assertNotUpscaled(name: string, targetHeight: number, image: TrimmedImage): void {
-  if (targetHeight > image.height) {
+function assertNotUpscaled(name: string, targetSize: number, originalSize: number): void {
+  if (targetSize > originalSize) {
     throw new Error(
-      `${name}: ${targetHeight}px pediria ampliar o original (${image.height}px). `
+      `${name}: ${targetSize}px pediria ampliar o original (${originalSize}px). `
       + 'Nunca amplie um original; peça uma versão maior.',
     );
   }
@@ -166,7 +202,7 @@ async function writeLogoAtScale(
   scale: number,
 ): Promise<void> {
   const height = variant.height * scale;
-  assertNotUpscaled(variant.name, height, image);
+  assertNotUpscaled(variant.name, height, image.height);
 
   const suffix = scale === 1 ? '' : `@${scale}x`;
   const buffer = await sharp(image.buffer).resize({ height }).webp(WEBP_OPTIONS).toBuffer();
@@ -178,10 +214,68 @@ async function generateLogoVariant(variant: LogoVariant): Promise<void> {
   await Promise.all(RETINA_SCALES.map((scale) => writeLogoAtScale(variant, image, scale)));
 }
 
-async function generateNativeImage({ source, name }: (typeof NATIVE_IMAGES)[number]) {
+async function generateProductImage({ source, name, displayWidth }: ProductImage) {
   const image = await loadTrimmed(source);
-  const buffer = await sharp(image.buffer).webp(WEBP_OPTIONS).toBuffer();
+  const width = displayWidth * PRODUCT_IMAGE_SCALE;
+  assertNotUpscaled(name, width, image.width);
+
+  const buffer = await sharp(image.buffer).resize({ width }).webp(WEBP_OPTIONS).toBuffer();
   writeOutput(join(IMAGES_DIR, `${name}.webp`), buffer);
+}
+
+interface Region {
+  readonly left: number;
+  readonly top: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+async function trimRegion(path: string): Promise<Region> {
+  const { info } = await sharp(path)
+    .trim({ threshold: TRIM_THRESHOLD })
+    .toBuffer({ resolveWithObject: true });
+
+  // O sharp informa o deslocamento do corte em valores negativos.
+  return {
+    left: -(info.trimOffsetLeft ?? 0),
+    top: -(info.trimOffsetTop ?? 0),
+    width: info.width,
+    height: info.height,
+  };
+}
+
+async function assertSameCanvas(paths: readonly string[]): Promise<void> {
+  const sizes = await Promise.all(paths.map(async (path) => {
+    const { width, height } = await sharp(path).metadata();
+    return `${width}x${height}`;
+  }));
+
+  if (new Set(sizes).size > 1) {
+    throw new Error(`As camadas precisam ter o mesmo tamanho para ficarem alinhadas: ${sizes}`);
+  }
+}
+
+async function generateHeroPosLayers(): Promise<void> {
+  const { displayWidth, device, screenMask } = HERO_POS_LAYERS;
+  const layers = [device, screenMask].map(({ source, output }) => ({
+    path: sourcePath(source),
+    output,
+  }));
+  await assertSameCanvas(layers.map(({ path }) => path));
+
+  // A área da maquininha (a primeira camada) vale para as duas.
+  const region = await trimRegion(layers[0].path);
+  const width = displayWidth * PRODUCT_IMAGE_SCALE;
+  assertNotUpscaled('pos-terminal-hero', width, region.width);
+
+  await Promise.all(layers.map(async ({ path, output }) => {
+    const buffer = await sharp(path)
+      .extract(region)
+      .resize({ width })
+      .webp(WEBP_OPTIONS)
+      .toBuffer();
+    writeOutput(output, buffer);
+  }));
 }
 
 function createCanvas(width: number, height: number, background: Color): Sharp {
@@ -247,7 +341,7 @@ const EMERALD_GLOW_SVG = `
 
 async function generateOgImage(): Promise<void> {
   const logo = await loadTrimmed(FULL_LOGO_SOURCE);
-  assertNotUpscaled('og-image', OG_LOGO_HEIGHT, logo);
+  assertNotUpscaled('og-image', OG_LOGO_HEIGHT, logo.height);
 
   const resizedLogo = await sharp(logo.buffer).resize({ height: OG_LOGO_HEIGHT }).png().toBuffer();
   const ogImage = await createCanvas(OG_WIDTH, OG_HEIGHT, INK_950)
@@ -265,7 +359,8 @@ async function main(): Promise<void> {
 
   await Promise.all([
     ...LOGO_VARIANTS.map(generateLogoVariant),
-    ...NATIVE_IMAGES.map(generateNativeImage),
+    ...PRODUCT_IMAGES.map(generateProductImage),
+    generateHeroPosLayers(),
     generateIcons(),
     generateOgImage(),
   ]);

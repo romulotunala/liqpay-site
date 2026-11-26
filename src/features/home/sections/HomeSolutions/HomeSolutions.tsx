@@ -1,16 +1,17 @@
 import { Barcode, CreditCard, Link2, QrCode } from 'lucide-react';
+import Image from 'next/image';
 import { useId } from 'react';
 import { Reveal } from '@/components/motion';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { FeatureGrid } from '@/components/ui/FeatureGrid';
-import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { Section } from '@/components/ui/Section';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { withBasePath } from '@/lib/paths';
 import styles from './HomeSolutions.module.scss';
 
-// Mockup da maquininha em versão horizontal para o cartão de destaque (pendente).
-const POS_CARD_MEDIA = { width: 560, height: 360 } as const;
+// Arquivo @2x exibido em 1x (ver scripts/generate-images.ts).
+const POS_IMAGE = { src: '/images/pos-terminal.webp', width: 560, height: 343 } as const;
 
 export function HomeSolutions() {
   const titleId = useId();
@@ -30,7 +31,18 @@ export function HomeSolutions() {
           <Card
             title='Maquininha LiqPay'
             icon={CreditCard}
-            media={<ImagePlaceholder width={POS_CARD_MEDIA.width} height={POS_CARD_MEDIA.height} />}
+            media={(
+              // alt vazio: o título do cartão, logo abaixo, já nomeia o produto.
+              <Image
+                src={withBasePath(POS_IMAGE.src)}
+                width={POS_IMAGE.width}
+                height={POS_IMAGE.height}
+                alt=''
+                loading='lazy'
+                decoding='async'
+                className={styles.posImage}
+              />
+            )}
           >
             <p>Aceita cartão e PIX, com conexão Wi-Fi e 4G.</p>
           </Card>

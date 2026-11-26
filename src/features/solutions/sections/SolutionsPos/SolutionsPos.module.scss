@@ -3,6 +3,9 @@
 
 $marker-size: 8px;
 
+// Em coluna única, a imagem vertical inteira empurraria o texto para baixo da dobra.
+$image-max-height-stacked: 420px;
+
 .layout {
   display: grid;
   gap: $spacing-12;
@@ -17,6 +20,16 @@ $marker-size: 8px;
 .visual {
   display: grid;
   place-items: center;
+}
+
+// A altura vem do atributo height; a largura acompanha a proporção quando ela é limitada.
+.image {
+  inline-size: auto;
+  max-block-size: $image-max-height-stacked;
+
+  @include respond-to(lg) {
+    max-block-size: none;
+  }
 }
 
 .content {
