@@ -36,8 +36,11 @@ const WORDMARK_LETTERS_CUT_ROW = 154;
 // Alfa até ~3%: resto invisível de suavização das bordas, aceito na linha do corte.
 const INVISIBLE_ALPHA = 8;
 
+// Logomarca completa (símbolo, nome e slogan): rodapé, JSON-LD e imagem Open Graph.
+const FULL_LOGO_SOURCE = 'LiqPay_logo_4096px.png';
+
 const LOGO_VARIANTS: readonly LogoVariant[] = [
-  { source: 'Logo_LiqPay_sem_fundo.png', name: 'logo-full', height: 160 },
+  { source: FULL_LOGO_SOURCE, name: 'logo-full', height: 160 },
   { source: 'LiqPay_nome.png', name: 'logo-wordmark', height: 40 },
   // Sem o slogan: em 32–40px de altura ele fica ilegível. Para o header e o rodapé.
   {
@@ -78,7 +81,6 @@ const PRODUCT_IMAGES: readonly ProductImage[] = [
     displayWidth: 280,
   },
 ];
-const FULL_LOGO_SOURCE = 'Logo_LiqPay_sem_fundo.png';
 
 const ICON_SIZE = 512;
 const APPLE_ICON_SIZE = 180;
