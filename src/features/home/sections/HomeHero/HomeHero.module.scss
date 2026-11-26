@@ -7,13 +7,17 @@ $overlap-mobile: 2rem;
 // Em coluna única, a maquininha inteira (603px) empurraria a próxima seção para longe.
 $device-max-height-stacked: 440px;
 
+// Ao lado do texto, ela precisa caber na primeira tela também em notebooks baixos (1366×768),
+// onde o próprio Hero é mais alto que a tela e a imagem fica centralizada na altura dele.
+$device-max-height-viewport: 65svh;
+
 // Inclinação máxima com o mouse nas bordas da tela. Discreta de propósito.
 $tilt-max-y: 8deg;
 $tilt-max-x: 5deg;
 $tilt-perspective: 1200px;
 $floor-shift: 12px;
 
-// O reflexo entra depois da imagem, que é o último passo da entrada (4 × 100ms + 600ms).
+// O reflexo entra depois da imagem, que é o último passo da entrada (3 × 100ms + 600ms).
 $glare-delay: calc(var(--enter-stagger) * 3 + var(--duration-enter));
 
 // z-index: a maquininha invade a seção seguinte e precisa ficar por cima dela.
@@ -126,7 +130,7 @@ $glare-delay: calc(var(--enter-stagger) * 3 + var(--duration-enter));
   max-block-size: $device-max-height-stacked;
 
   @include respond-to(lg) {
-    max-block-size: none;
+    max-block-size: $device-max-height-viewport;
   }
 }
 
