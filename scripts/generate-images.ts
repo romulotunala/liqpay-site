@@ -8,6 +8,7 @@ import sharp, { type Color, type Sharp } from 'sharp';
 const SOURCE_DIR = 'docs/imagens';
 const IMAGES_DIR = 'public/images';
 const APP_DIR = 'src/app';
+const ASSETS_DIR = 'src/assets';
 
 const INK_950 = '#07110D';
 const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 };
@@ -54,13 +55,6 @@ const LOGO_VARIANTS: readonly LogoVariant[] = [
 
 const SYMBOL_SOURCE = 'LiqPay_simbolo.png';
 
-// Imagens geradas no tamanho do original, sem @2x: o original não tem resolução para isso.
-// Exibidas menores que o arquivo, ficam nítidas em telas 1x e aceitáveis em 2x.
-const NATIVE_IMAGES = [
-  // Símbolo com a maquininha: imagem provisória do Hero da Home.
-  { source: SYMBOL_SOURCE, name: 'logo-symbol-large' },
-] as const;
-
 interface ProductImage {
   readonly source: string;
   readonly name: string;
@@ -81,6 +75,21 @@ const PRODUCT_IMAGES: readonly ProductImage[] = [
     displayWidth: 280,
   },
 ];
+
+// Camadas do Hero: os originais têm o mesmo canvas e já vêm alinhados. As duas são recortadas
+// pela mesma área (a da maquininha) para continuarem alinhadas. A máscara é usada só pelo CSS
+// (mask-image), por isso vai para src/assets/.
+const HERO_POS_LAYERS = {
+  displayWidth: 260,
+  device: {
+    source: 'maquininha_alta_resolucao.png',
+    output: join(IMAGES_DIR, 'pos-terminal-hero.webp'),
+  },
+  screenMask: {
+    source: 'mascara_tela_alta_resolucao.png',
+    output: join(ASSETS_DIR, 'pos-screen-mask.webp'),
+  },
+} as const;
 
 const ICON_SIZE = 512;
 const APPLE_ICON_SIZE = 180;
@@ -144,12 +153,16 @@ async function cropTopRows(path: string, rows: number, width: number): Promise<B
   return sharp(path).extract({ left: 0, top: 0, width, height: rows }).png().toBuffer();
 }
 
-async function loadTrimmed(source: string, keepTopRows?: number): Promise<TrimmedImage> {
+function sourcePath(source: string): string {
   const path = join(SOURCE_DIR, source);
   if (!existsSync(path)) {
     throw new Error(`Original não encontrado: ${path}. Os originais ficam só na máquina local.`);
   }
+  return path;
+}
 
+async function loadTrimmed(source: string, keepTopRows?: number): Promise<TrimmedImage> {
+  const path = sourcePath(source);
   const alpha = await readAlpha(path);
   assertTransparentCorners(path, alpha);
 
@@ -201,12 +214,6 @@ async function generateLogoVariant(variant: LogoVariant): Promise<void> {
   await Promise.all(RETINA_SCALES.map((scale) => writeLogoAtScale(variant, image, scale)));
 }
 
-async function generateNativeImage({ source, name }: (typeof NATIVE_IMAGES)[number]) {
-  const image = await loadTrimmed(source);
-  const buffer = await sharp(image.buffer).webp(WEBP_OPTIONS).toBuffer();
-  writeOutput(join(IMAGES_DIR, `${name}.webp`), buffer);
-}
-
 async function generateProductImage({ source, name, displayWidth }: ProductImage) {
   const image = await loadTrimmed(source);
   const width = displayWidth * PRODUCT_IMAGE_SCALE;
@@ -214,6 +221,61 @@ async function generateProductImage({ source, name, displayWidth }: ProductImage
 
   const buffer = await sharp(image.buffer).resize({ width }).webp(WEBP_OPTIONS).toBuffer();
   writeOutput(join(IMAGES_DIR, `${name}.webp`), buffer);
+}
+
+interface Region {
+  readonly left: number;
+  readonly top: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+async function trimRegion(path: string): Promise<Region> {
+  const { info } = await sharp(path)
+    .trim({ threshold: TRIM_THRESHOLD })
+    .toBuffer({ resolveWithObject: true });
+
+  // O sharp informa o deslocamento do corte em valores negativos.
+  return {
+    left: -(info.trimOffsetLeft ?? 0),
+    top: -(info.trimOffsetTop ?? 0),
+    width: info.width,
+    height: info.height,
+  };
+}
+
+async function assertSameCanvas(paths: readonly string[]): Promise<void> {
+  const sizes = await Promise.all(paths.map(async (path) => {
+    const { width, height } = await sharp(path).metadata();
+    return `${width}x${height}`;
+  }));
+
+  if (new Set(sizes).size > 1) {
+    throw new Error(`As camadas precisam ter o mesmo tamanho para ficarem alinhadas: ${sizes}`);
+  }
+}
+
+async function generateHeroPosLayers(): Promise<void> {
+  const { displayWidth, device, screenMask } = HERO_POS_LAYERS;
+  const layers = [device, screenMask].map(({ source, output }) => ({
+    path: sourcePath(source),
+    output,
+  }));
+  await assertSameCanvas(layers.map(({ path }) => path));
+
+  // A área da maquininha (a primeira camada) vale para as duas.
+  const region = await trimRegion(layers[0].path);
+  const width = displayWidth * PRODUCT_IMAGE_SCALE;
+  assertNotUpscaled('pos-terminal-hero', width, region.width);
+
+  await Promise.all(layers.map(async ({ path, output }) => {
+    const buffer = await sharp(path)
+      .extract(region)
+      .resize({ width })
+      .webp(WEBP_OPTIONS)
+      .toBuffer();
+    writeOutput(output, buffer);
+  }));
 }
 
 function createCanvas(width: number, height: number, background: Color): Sharp {
@@ -297,8 +359,8 @@ async function main(): Promise<void> {
 
   await Promise.all([
     ...LOGO_VARIANTS.map(generateLogoVariant),
-    ...NATIVE_IMAGES.map(generateNativeImage),
     ...PRODUCT_IMAGES.map(generateProductImage),
+    generateHeroPosLayers(),
     generateIcons(),
     generateOgImage(),
   ]);
