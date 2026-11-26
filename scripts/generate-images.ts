@@ -54,9 +54,30 @@ const SYMBOL_SOURCE = 'LiqPay_simbolo.png';
 // Imagens geradas no tamanho do original, sem @2x: o original não tem resolução para isso.
 // Exibidas menores que o arquivo, ficam nítidas em telas 1x e aceitáveis em 2x.
 const NATIVE_IMAGES = [
-  // Símbolo com a maquininha: cartão "Maquininha LiqPay", até o mockup chegar.
+  // Símbolo com a maquininha: imagem provisória do Hero da Home.
   { source: SYMBOL_SOURCE, name: 'logo-symbol-large' },
 ] as const;
+
+interface ProductImage {
+  readonly source: string;
+  readonly name: string;
+  /** Largura máxima de exibição em CSS px. O arquivo sai no dobro e é exibido em 1x. */
+  readonly displayWidth: number;
+}
+
+// Um arquivo @2x só, como a logo do header: nítido em telas retina, sem srcset.
+const PRODUCT_IMAGE_SCALE = 2;
+
+const PRODUCT_IMAGES: readonly ProductImage[] = [
+  // Deitada: tem a proporção do cartão de destaque "Maquininha LiqPay" da Home.
+  { source: 'maquininha_deitada_alta_resolucao.png', name: 'pos-terminal', displayWidth: 560 },
+  // Em pé e em 3/4: cabe na coluna estreita da seção da maquininha em Soluções.
+  {
+    source: 'maquininha_liqpay_3-4_alta_resolucao.png',
+    name: 'pos-terminal-angled',
+    displayWidth: 280,
+  },
+];
 const FULL_LOGO_SOURCE = 'Logo_LiqPay_sem_fundo.png';
 
 const ICON_SIZE = 512;
@@ -145,10 +166,10 @@ async function loadTrimmed(source: string, keepTopRows?: number): Promise<Trimme
   return { buffer: data, width: info.width, height: info.height };
 }
 
-function assertNotUpscaled(name: string, targetHeight: number, image: TrimmedImage): void {
-  if (targetHeight > image.height) {
+function assertNotUpscaled(name: string, targetSize: number, originalSize: number): void {
+  if (targetSize > originalSize) {
     throw new Error(
-      `${name}: ${targetHeight}px pediria ampliar o original (${image.height}px). `
+      `${name}: ${targetSize}px pediria ampliar o original (${originalSize}px). `
       + 'Nunca amplie um original; peça uma versão maior.',
     );
   }
@@ -166,7 +187,7 @@ async function writeLogoAtScale(
   scale: number,
 ): Promise<void> {
   const height = variant.height * scale;
-  assertNotUpscaled(variant.name, height, image);
+  assertNotUpscaled(variant.name, height, image.height);
 
   const suffix = scale === 1 ? '' : `@${scale}x`;
   const buffer = await sharp(image.buffer).resize({ height }).webp(WEBP_OPTIONS).toBuffer();
@@ -181,6 +202,15 @@ async function generateLogoVariant(variant: LogoVariant): Promise<void> {
 async function generateNativeImage({ source, name }: (typeof NATIVE_IMAGES)[number]) {
   const image = await loadTrimmed(source);
   const buffer = await sharp(image.buffer).webp(WEBP_OPTIONS).toBuffer();
+  writeOutput(join(IMAGES_DIR, `${name}.webp`), buffer);
+}
+
+async function generateProductImage({ source, name, displayWidth }: ProductImage) {
+  const image = await loadTrimmed(source);
+  const width = displayWidth * PRODUCT_IMAGE_SCALE;
+  assertNotUpscaled(name, width, image.width);
+
+  const buffer = await sharp(image.buffer).resize({ width }).webp(WEBP_OPTIONS).toBuffer();
   writeOutput(join(IMAGES_DIR, `${name}.webp`), buffer);
 }
 
@@ -247,7 +277,7 @@ const EMERALD_GLOW_SVG = `
 
 async function generateOgImage(): Promise<void> {
   const logo = await loadTrimmed(FULL_LOGO_SOURCE);
-  assertNotUpscaled('og-image', OG_LOGO_HEIGHT, logo);
+  assertNotUpscaled('og-image', OG_LOGO_HEIGHT, logo.height);
 
   const resizedLogo = await sharp(logo.buffer).resize({ height: OG_LOGO_HEIGHT }).png().toBuffer();
   const ogImage = await createCanvas(OG_WIDTH, OG_HEIGHT, INK_950)
@@ -266,6 +296,7 @@ async function main(): Promise<void> {
   await Promise.all([
     ...LOGO_VARIANTS.map(generateLogoVariant),
     ...NATIVE_IMAGES.map(generateNativeImage),
+    ...PRODUCT_IMAGES.map(generateProductImage),
     generateIcons(),
     generateOgImage(),
   ]);
